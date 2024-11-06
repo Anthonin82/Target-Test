@@ -135,7 +135,7 @@ public class PlayerController : MonoBehaviour
             {
                 DashAngle.y = -1;
             }
-            if (DashAngle.y == -1 && DashAngle.x != 0  ) 
+            if (DashAngle.y == -1 && DashAngle.x != 0 && !onGround ) 
             {
                 DashAngle = DashAngle * CoefSpeedDashDown;
             }
@@ -154,9 +154,8 @@ public class PlayerController : MonoBehaviour
     public IEnumerator DashTimer()
     {
         
-        yield return new WaitForSeconds(DashDistance/DashSpeed);
-        Debug.Log("stop");  
-        rb.velocity = Vector2.zero;        
+        yield return new WaitForSeconds(DashDistance/DashSpeed);          
+        rb.velocity =  new Vector2 (0, rb.velocity.y);        
         isDashing = false;
         rb.gravityScale = defaultGravityScale; 
 
