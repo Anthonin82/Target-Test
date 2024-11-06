@@ -245,7 +245,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 15.48156
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -298,7 +298,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5822599697812885983, guid: 6324eaaf65ba8d742b0430a0deb67e46, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.31
+      value: -9.19
       objectReference: {fileID: 0}
     - target: {fileID: 5822599697812885983, guid: 6324eaaf65ba8d742b0430a0deb67e46, type: 3}
       propertyPath: m_LocalPosition.y
@@ -515,10 +515,16 @@ MonoBehaviour:
   onLeftWall: 0
   onRightWall: 0
   onWall: 0
+  onGround: 0
   isJumping: 0
   reachedJumpApexThisFrame: 0
   leftPlayerSide: {fileID: 1722461106}
   rightPlayerSide: {fileID: 510960164}
+  bottomPlayerSide: {fileID: 361036926}
+  pressingDash: 0
+  DashLength: 50
+  DashAngle: {x: 0, y: 0}
+  DashTime: 0
 --- !u!1 &1630306864
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,8 +600,12 @@ PrefabInstance:
       value: Square
       objectReference: {fileID: 0}
     - target: {fileID: 5822599697812885983, guid: 6324eaaf65ba8d742b0430a0deb67e46, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 19.367779
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822599697812885983, guid: 6324eaaf65ba8d742b0430a0deb67e46, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.5
+      value: -0.0591
       objectReference: {fileID: 0}
     - target: {fileID: 5822599697812885983, guid: 6324eaaf65ba8d742b0430a0deb67e46, type: 3}
       propertyPath: m_LocalPosition.y

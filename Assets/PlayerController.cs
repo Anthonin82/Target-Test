@@ -30,7 +30,12 @@ public class PlayerController : MonoBehaviour
     bool pressingDown;
 
     bool pressingJump;
-    bool pressingDash;
+    
+    public bool pressingDash;
+    public float DashLength;
+    public Vector2 DashAngle;
+    public float DashTime;
+    
 
 
     private void Update()
@@ -72,13 +77,30 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(0, rb.velocity.y);
         }
 
-        if(pressingJump && onGround && !isJumping)// could be onGround and jumoing, since the onGround check could be a bit too wide
+        if(pressingJump && onGround && !isJumping)// could be onGround and jumping, since the onGround check could be a bit too wide
         {
             isJumping = true;
 
         }
+        
+        
 
+        if (pressingDash && !onWall)
+        {
+            DashAngle.x = Input.GetAxis("Horizontal");
+            DashAngle.y = Input.GetAxis("Vertical");
+            Debug.Log(DashAngle);
+            
+            rb.velocity = new Vector2(DashAngle.x * DashLength, DashAngle.y * DashLength);
+            StartCoroutine("DashTimer");
+            
+        }
 
+    }
+    public IEnumerator DashTimer()
+    {
+        yield return new WaitForSeconds(DashTime);
+        rb.velocity = Vector2.zero;
 
     }
 
