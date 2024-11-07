@@ -832,6 +832,10 @@ PrefabInstance:
       value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 8270833652943281666, guid: 39dfdec4b1e904b4abd801cd37820975, type: 3}
+      propertyPath: TimerGravityReset
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8270833652943281666, guid: 39dfdec4b1e904b4abd801cd37820975, type: 3}
       propertyPath: TimerInterdiction
       value: 0.27
       objectReference: {fileID: 0}

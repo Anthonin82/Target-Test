@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     public bool reachedJumpApexThisFrame = false;    
     public float jumpForce = 200f;
     public float WallJumpHorizontalForce = 200f;
+    public float TimerJumpApex;
+    public bool Gravityneeded;
 
     public Transform leftPlayerSide;
     public Transform rightPlayerSide;
@@ -114,6 +116,7 @@ public class PlayerController : MonoBehaviour
 
         if (pressingJump && onGround && !isJumping)// could be onGround and jumping, since the onGround check could be a bit too wide
         {
+            StartCoroutine("JumpTimer");
             isJumping = true;
             rb.AddForce(Vector2.up * jumpForce);
             rb.gravityScale = GravityCoefficient * defaultGravityScale;
@@ -125,7 +128,7 @@ public class PlayerController : MonoBehaviour
         {
             isJumping = false;
             reachedJumpApexThisFrame = false;
-            rb.gravityScale =  defaultGravityScale;
+            rb.gravityScale = defaultGravityScale;
         }
         if ( pressingDown && !isJumping && !onGround)
         {
@@ -167,6 +170,12 @@ public class PlayerController : MonoBehaviour
     public void LandingOnGround()
     {
         rb.gravityScale = defaultGravityScale;
+    }
+    public IEnumerator JumpTimer()
+    {
+        yield return new WaitForSeconds(TimerJumpApex);
+        Gravityneeded = true; 
+
     }
     public IEnumerator DashTimer()
     {
