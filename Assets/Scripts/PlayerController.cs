@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public SpriteRenderer PlayerSR;
     public Rigidbody2D rb;
     public float horizontalSpeed;
     [HideInInspector] float defaultGravityScale;
+    public float TimerGravityReset;
+    public float GravityCoefficient;
 
     public LayerMask wallLayer;
     public float wallDetectionHorizontalDistance = 0.1f;
@@ -15,13 +18,13 @@ public class PlayerController : MonoBehaviour
     public bool onLeftWall;
     public bool onRightWall;
     public bool onWall;
-
     public bool onGround;   
 
     public bool isJumping = false;
     bool pressingJump;
     public bool reachedJumpApexThisFrame = false;    
     public float jumpForce = 200f;
+    public float WallJumpHorizontalForce = 200f;
 
     public Transform leftPlayerSide;
     public Transform rightPlayerSide;
@@ -32,14 +35,17 @@ public class PlayerController : MonoBehaviour
     bool pressingUp;
     bool pressingDown;
 
-    
-    
-    public bool pressingDash;
+    public bool pressingDash;        
     public float DashSpeed;
     public float DashDistance;        
     public bool DashAvailable = false;
     public bool isDashing = false;
     public float CoefSpeedDashDown;
+
+    public bool InterdictionLeft;
+    public bool InterdictionRight;
+    public float TimerInterdiction;
+    public float WalljumpVerticalForceModifier;
 
     private void Awake()
     {
@@ -54,19 +60,30 @@ public class PlayerController : MonoBehaviour
         pressingDown = Input.GetKey(KeyCode.S);
 
         pressingJump = Input.GetKey(KeyCode.P);
-        pressingDash = Input.GetKey(KeyCode.Space);
+        pressingDash = Input.GetKeyDown(KeyCode.Space);
+
         
+
+        if (pressingDash) 
+        {
+            if (!onWall && DashAvailable && !isDashing)
+            {
+                OnDash();
+
+            }
+        }
+
 
         if (Input.GetKeyUp(KeyCode.P) && isJumping)
         {            
             reachedJumpApexThisFrame = true;
         }
+
     }
 
 
     private void FixedUpdate()
-    {      
-
+    {         
         onLeftWall = Physics2D.BoxCast(leftPlayerSide.position, new Vector2(wallDetectionHorizontalDistance, wallDetectionVerticalDistance), 0, Vector2.left, 0, wallLayer);
         onRightWall = Physics2D.BoxCast(rightPlayerSide.position, new Vector2(wallDetectionHorizontalDistance, wallDetectionVerticalDistance), 0, Vector2.right, 0, wallLayer);
         onWall = onLeftWall || onRightWall;
@@ -82,11 +99,11 @@ public class PlayerController : MonoBehaviour
             DashAvailable = true;
         }
 
-        if (pressingLeft && !pressingRight && !onLeftWall && !isDashing)
+        if (pressingLeft && !pressingRight && !onLeftWall && !isDashing && !InterdictionLeft)
         {
             rb.velocity = new Vector2(-horizontalSpeed, rb.velocity.y);
         }
-        else if (pressingRight && !pressingLeft && !onRightWall && !isDashing)
+        else if (pressingRight && !pressingLeft && !onRightWall && !isDashing && !InterdictionRight)
         {
             rb.velocity = new Vector2(horizontalSpeed, rb.velocity.y);
         }
@@ -99,7 +116,8 @@ public class PlayerController : MonoBehaviour
         {
             isJumping = true;
             rb.AddForce(Vector2.up * jumpForce);
-            rb.gravityScale = 0.2f * defaultGravityScale;
+            rb.gravityScale = GravityCoefficient * defaultGravityScale;
+            //GravityReset();
 
         }
 
@@ -107,43 +125,42 @@ public class PlayerController : MonoBehaviour
         {
             isJumping = false;
             reachedJumpApexThisFrame = false;
-            rb.gravityScale = 1 * defaultGravityScale;
+            rb.gravityScale =  defaultGravityScale;
         }
         if ( pressingDown && !isJumping && !onGround)
         {
-            rb.gravityScale = 2 * defaultGravityScale;
+            rb.gravityScale = GravityCoefficient * defaultGravityScale;
         }
 
-        if (pressingDash && !onWall && DashAvailable && !isDashing)
+       
+        if (pressingJump && onWall && !onGround)
         {
-            isDashing = true;
-            rb.gravityScale = 0;
-            Vector2 DashAngle = Vector2.zero;
-            if (pressingRight && !pressingLeft)
+            if (onLeftWall && pressingRight)
             {
-                DashAngle.x = 1;
+                InterdictionLeft = true;
+                StartCoroutine("TimerInterdictionLeft");
+                rb.gravityScale = GravityCoefficient * defaultGravityScale;
+                rb.velocity = new Vector2(rb.velocity.x, 0);
+                rb.AddForce(new Vector2( WallJumpHorizontalForce, jumpForce * WalljumpVerticalForceModifier ));
+                isJumping = false ;
+                GravityReset();
+                StartCoroutine("ColorChangeWallJump");
+                
             }
-            else if (pressingLeft && !pressingRight)
+            if (onRightWall && pressingLeft) 
             {
-                DashAngle.x = -1;
+                InterdictionRight = true;
+                StartCoroutine("TimerInterdictionRight");
+                rb.gravityScale = GravityCoefficient * defaultGravityScale;
+                rb.velocity = new Vector2(rb.velocity.x, 0);  
+                rb.AddForce(new Vector2 (- WallJumpHorizontalForce, jumpForce * WalljumpVerticalForceModifier));
+                isJumping = false ;
+                GravityReset();
+                StartCoroutine("ColorChangeWallJump");
             }
-            if (pressingUp && !pressingDown)
-            {
-                DashAngle.y = 1;
-            }
-            else if (pressingDown && !pressingUp)
-            {
-                DashAngle.y = -1;
-            }
-            if (DashAngle.y == -1 && DashAngle.x != 0 && !onGround ) 
-            {
-                DashAngle = DashAngle * CoefSpeedDashDown;
-            }
-            rb.velocity = new Vector2(DashAngle.x * DashSpeed, DashAngle.y*DashSpeed);
-            DashAvailable = false;
-            StartCoroutine("DashTimer");      
+            
+        }
                        
-        }        
 
 
     }
@@ -155,14 +172,88 @@ public class PlayerController : MonoBehaviour
     {
         
         yield return new WaitForSeconds(DashDistance/DashSpeed);          
-        rb.velocity =  new Vector2 (0, rb.velocity.y);        
+        rb.velocity =  new Vector2 (0, rb.velocity.y); 
         isDashing = false;
         rb.gravityScale = defaultGravityScale; 
 
 
     }
+    public IEnumerator ColorChangeWallJump()
+    {
+        PlayerSR.color = Color.black;
+        yield return new WaitForSeconds(0.5f);
+        PlayerSR.color = Color.white;
+    }
+    public IEnumerator ColorChangeDash() 
+    { 
+        PlayerSR.color = Color.blue;
+        yield return new WaitForSeconds(0.5f);
+        PlayerSR.color = Color.white;
+    }
+    public IEnumerator TimerInterdictionLeft()
+    {
+        yield return new WaitForSeconds(TimerInterdiction);
+        InterdictionLeft = false;
+    }
+    public IEnumerator TimerInterdictionRight()
+    {
+        yield return new WaitForSeconds(TimerInterdiction);
+        InterdictionRight = false;
+    }
+    public void GravityReset()
+    {        
+        if (isJumping && rb.velocity.y <= 0)
+        { 
+            rb.gravityScale= GravityCoefficient * defaultGravityScale;            
+        }
+        /*else if ( !isJumping && !isDashing)
+        {
+            rb.gravityScale = defaultGravityScale;
+        }*/
 
 
+        if (!isDashing && isJumping )
+        {
+            rb.gravityScale = GravityCoefficient * defaultGravityScale;
+        }
+        if (!isDashing && isJumping) 
+        {
+            rb.gravityScale = defaultGravityScale;
+        }
+        
+    }
+    public void OnDash()
+    {
+        
+        isDashing = true;
+        rb.gravityScale = 0;
+        Vector2 DashAngle = Vector2.zero;
+        if (pressingRight && !pressingLeft)
+        {
+            DashAngle.x = 1;
+        }
+        else if (pressingLeft && !pressingRight)
+        {
+            DashAngle.x = -1;
+        }
+        if (pressingUp && !pressingDown)
+        {
+            DashAngle.y = 1;
+        }
+        else if (pressingDown && !pressingUp)
+        {
+            DashAngle.y = -1;
+        }
+        if (DashAngle.y == -1 && DashAngle.x != 0 && !onGround)
+        {
+            DashAngle = DashAngle * CoefSpeedDashDown;
+        }
+        rb.velocity = new Vector2(DashAngle.x * DashSpeed, DashAngle.y * DashSpeed);
+        DashAvailable = false;
+        //GravityReset();
+        StartCoroutine("ColorChangeDash");
+        StartCoroutine("DashTimer");
 
+    }
 
 }
