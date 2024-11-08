@@ -168,7 +168,7 @@ public class PlayerController : MonoBehaviour
                     GravityReset();
                     StartCoroutine("ColorChangeWallJump");
                 }
-                else if (DoubleJumpAvailable && !onWall)
+                else if (DoubleJumpAvailable && !onWall && !isDashing)
                 {
                     StopCoroutine(JumpTimer());
                     StartCoroutine("JumpTimer");
