@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     public float horizontalSpeed;
     [HideInInspector] float defaultGravityScale;
     public float TimerGravityReset;
-    public float GravityCoefficient;
+    public float JumpingGravityCoefficient;
 
     public LayerMask wallLayer;
     public float wallDetectionHorizontalDistance = 0.1f;
@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     public float WallJumpHorizontalForce = 200f;
     public float TimerJumpApex;
     public bool Gravityneeded;
+    public bool DoubleJumpAvailable;
 
     public Transform leftPlayerSide;
     public Transform rightPlayerSide;
@@ -44,6 +45,8 @@ public class PlayerController : MonoBehaviour
     public bool isDashing = false;
     public float CoefSpeedDashDown;
 
+    public bool RecentlyOnleftWall;
+    public bool RecentlyOnRightWall;
     public bool InterdictionLeft;
     public bool InterdictionRight;
     public float TimerInterdiction;
@@ -61,21 +64,18 @@ public class PlayerController : MonoBehaviour
         pressingUp = Input.GetKey(KeyCode.W);
         pressingDown = Input.GetKey(KeyCode.S);
 
-        pressingJump = Input.GetKey(KeyCode.P);
-        pressingDash = Input.GetKeyDown(KeyCode.Space);
-
+        
         
 
-        if (pressingDash) 
+        if (!pressingDash) 
         {
-            if (!onWall && DashAvailable && !isDashing)
-            {
-                OnDash();
-
-            }
+            pressingDash = Input.GetKeyDown(KeyCode.Space);
         }
-
-
+        if (!pressingJump)
+        {
+            pressingJump = Input.GetKeyDown(KeyCode.P);
+        }
+        
         if (Input.GetKeyUp(KeyCode.P) && isJumping)
         {            
             reachedJumpApexThisFrame = true;
@@ -85,10 +85,33 @@ public class PlayerController : MonoBehaviour
 
 
     private void FixedUpdate()
-    {         
+    {
+        
+
+        if (onLeftWall && !Physics2D.BoxCast(leftPlayerSide.position, new Vector2(wallDetectionHorizontalDistance, wallDetectionVerticalDistance), 0, Vector2.left, 0, wallLayer) )//on rentre la dedans quand on quitte le mur cette frame-ci
+        {
+            
+            StartCoroutine(ResetOnWall("left"));
+        }
+        if (onRightWall && !Physics2D.BoxCast(rightPlayerSide.position, new Vector2(wallDetectionHorizontalDistance, wallDetectionVerticalDistance), 0, Vector2.right, 0, wallLayer ))
+        {
+            StartCoroutine(ResetOnWall("right"));
+        }
+
         onLeftWall = Physics2D.BoxCast(leftPlayerSide.position, new Vector2(wallDetectionHorizontalDistance, wallDetectionVerticalDistance), 0, Vector2.left, 0, wallLayer);
         onRightWall = Physics2D.BoxCast(rightPlayerSide.position, new Vector2(wallDetectionHorizontalDistance, wallDetectionVerticalDistance), 0, Vector2.right, 0, wallLayer);
         onWall = onLeftWall || onRightWall;
+
+        if (onLeftWall)
+        {
+            RecentlyOnleftWall = true;
+        }
+
+        if (onRightWall)
+        {
+            RecentlyOnRightWall = true;
+        }
+
 
         if (!onGround && Physics2D.Raycast(bottomPlayerSide.position, Vector2.down, 0.01f, wallLayer))
         {
@@ -96,11 +119,7 @@ public class PlayerController : MonoBehaviour
         }
 
         onGround = Physics2D.Raycast(bottomPlayerSide.position, Vector2.down, 0.01f, wallLayer);
-        if (onGround)
-        { 
-            DashAvailable = true;
-        }
-
+        
         if (pressingLeft && !pressingRight && !onLeftWall && !isDashing && !InterdictionLeft)
         {
             rb.velocity = new Vector2(-horizontalSpeed, rb.velocity.y);
@@ -114,14 +133,56 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(0, rb.velocity.y);
         }
 
-        if (pressingJump && onGround && !isJumping)// could be onGround and jumping, since the onGround check could be a bit too wide
+        if (pressingJump  && !isJumping )// could be onGround and jumping, since the onGround check could be a bit too wide
         {
-            StartCoroutine("JumpTimer");
-            isJumping = true;
-            rb.AddForce(Vector2.up * jumpForce);
-            rb.gravityScale = GravityCoefficient * defaultGravityScale;
-            //GravityReset();
+            if (onGround)
+            {
+                StartCoroutine("JumpTimer");
+                isJumping = true;
+                rb.AddForce(Vector2.up * jumpForce);
+                rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
+            }         
+            if (!onGround)
+            {
+                 
+                if (RecentlyOnleftWall && pressingRight)
+                {
+                    InterdictionLeft = true;
+                    StartCoroutine("TimerInterdictionLeft");
+                    rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
+                    rb.velocity = new Vector2(rb.velocity.x, 0);
+                    rb.AddForce(new Vector2(WallJumpHorizontalForce, jumpForce * WalljumpVerticalForceModifier));
+                    isJumping = false;
+                    GravityReset();
+                    StartCoroutine("ColorChangeWallJump");
 
+                }
+                else if (RecentlyOnRightWall && pressingLeft)
+                {
+                    InterdictionRight = true;
+                    StartCoroutine("TimerInterdictionRight");
+                    rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
+                    rb.velocity = new Vector2(rb.velocity.x, 0);
+                    rb.AddForce(new Vector2(-WallJumpHorizontalForce, jumpForce * WalljumpVerticalForceModifier));
+                    isJumping = false;
+                    GravityReset();
+                    StartCoroutine("ColorChangeWallJump");
+                }
+                else if (DoubleJumpAvailable && !onWall)
+                {
+                    StopCoroutine(JumpTimer());
+                    StartCoroutine("JumpTimer");
+                    isJumping = true;
+                    rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
+                    if (rb.velocity.y < 0)
+                    {
+                        rb.velocity = new Vector2(rb.velocity.x, 0);
+                    }
+                    rb.AddForce(Vector2.up * jumpForce);
+                    DoubleJumpAvailable = false;
+                }
+            }
+          
         }
 
         if (reachedJumpApexThisFrame)
@@ -132,49 +193,50 @@ public class PlayerController : MonoBehaviour
         }
         if ( pressingDown && !isJumping && !onGround)
         {
-            rb.gravityScale = GravityCoefficient * defaultGravityScale;
+            rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
         }
 
-       
-        if (pressingJump && onWall && !onGround)
+        if (pressingDash && !onWall && DashAvailable && !isDashing)
         {
-            if (onLeftWall && pressingRight)
-            {
-                InterdictionLeft = true;
-                StartCoroutine("TimerInterdictionLeft");
-                rb.gravityScale = GravityCoefficient * defaultGravityScale;
-                rb.velocity = new Vector2(rb.velocity.x, 0);
-                rb.AddForce(new Vector2( WallJumpHorizontalForce, jumpForce * WalljumpVerticalForceModifier ));
-                isJumping = false ;
-                GravityReset();
-                StartCoroutine("ColorChangeWallJump");
-                
-            }
-            if (onRightWall && pressingLeft) 
-            {
-                InterdictionRight = true;
-                StartCoroutine("TimerInterdictionRight");
-                rb.gravityScale = GravityCoefficient * defaultGravityScale;
-                rb.velocity = new Vector2(rb.velocity.x, 0);  
-                rb.AddForce(new Vector2 (- WallJumpHorizontalForce, jumpForce * WalljumpVerticalForceModifier));
-                isJumping = false ;
-                GravityReset();
-                StartCoroutine("ColorChangeWallJump");
-            }
-            
+            OnDash();           
         }
-                       
-
-
+        if (pressingDash)
+        {
+            pressingDash = Input.GetKeyDown(KeyCode.Space);
+        }
+        if (pressingJump)
+        {
+            pressingJump = Input.GetKeyDown(KeyCode.P);
+        }
     }
     public void LandingOnGround()
     {
         rb.gravityScale = defaultGravityScale;
+        DashAvailable = true;
+        DoubleJumpAvailable = true;
     }
     public IEnumerator JumpTimer()
     {
         yield return new WaitForSeconds(TimerJumpApex);
         Gravityneeded = true; 
+
+    }
+    public IEnumerator ResetOnWall(string ValueParam)
+    {
+        yield return new WaitForSeconds (Time.fixedDeltaTime * 3);
+        if ( ValueParam == "left")
+        {
+            RecentlyOnleftWall = false;
+        }
+        else if (ValueParam == "right") 
+        { 
+            RecentlyOnRightWall = false;
+        }
+        else
+        {
+            Debug.LogError("Error");
+        }
+         
 
     }
     public IEnumerator DashTimer()
@@ -213,7 +275,7 @@ public class PlayerController : MonoBehaviour
     {        
         if (isJumping && rb.velocity.y <= 0)
         { 
-            rb.gravityScale= GravityCoefficient * defaultGravityScale;            
+            rb.gravityScale= JumpingGravityCoefficient * defaultGravityScale;            
         }
         /*else if ( !isJumping && !isDashing)
         {
@@ -223,7 +285,7 @@ public class PlayerController : MonoBehaviour
 
         if (!isDashing && isJumping )
         {
-            rb.gravityScale = GravityCoefficient * defaultGravityScale;
+            rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
         }
         if (!isDashing && isJumping) 
         {
