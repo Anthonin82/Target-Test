@@ -52,10 +52,9 @@ public class PlayerController : MonoBehaviour
     public float TimerInterdiction;
     public float WalljumpVerticalForceModifier;
 
-    public bool CornerBoost;
+    public bool inCornerBoostState;
     public float CornerBoostDuration;    
     public float CoefCornerBoostHorizontalSpeed;
-    public float VitesseHorizontalModifiee;
 
     private void Awake()
     {
@@ -124,14 +123,17 @@ public class PlayerController : MonoBehaviour
         }
 
         onGround = Physics2D.Raycast(bottomPlayerSide.position, Vector2.down, 0.01f, wallLayer);
-        
+
+        float currentFrameCornerBoostCoeff;
+        if (inCornerBoostState) { currentFrameCornerBoostCoeff = CoefCornerBoostHorizontalSpeed; } else { currentFrameCornerBoostCoeff = 1f; }
+
         if (pressingLeft && !pressingRight && !onLeftWall && !isDashing && !InterdictionLeft)
         {
-            rb.velocity = new Vector2(-horizontalSpeed, rb.velocity.y);
+            rb.velocity = new Vector2(-horizontalSpeed * currentFrameCornerBoostCoeff, rb.velocity.y);
         }
         else if (pressingRight && !pressingLeft && !onRightWall && !isDashing && !InterdictionRight)
         {
-            rb.velocity = new Vector2(horizontalSpeed, rb.velocity.y);
+            rb.velocity = new Vector2(horizontalSpeed * currentFrameCornerBoostCoeff, rb.velocity.y);
         }
         else if (!pressingLeft && !pressingRight && !isDashing)
         {
@@ -280,7 +282,7 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(CornerBoostDuration);
         
-        CornerBoost = false;
+        inCornerBoostState = false;
     }
     public void GravityReset()
     {        
@@ -339,11 +341,10 @@ public class PlayerController : MonoBehaviour
     }
     public void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Corner") && !CornerBoost && (isDashing || isJumping) &&!onGround)
+        if (other.gameObject.CompareTag("Corner") && !inCornerBoostState && (isDashing || isJumping) &&!onGround)
         {
             StartCoroutine(CornerBoostReset());            
-            VitesseHorizontalModifiee = CoefCornerBoostHorizontalSpeed * horizontalSpeed;
-            CornerBoost = true;
+            inCornerBoostState = true;
         }
     }  
 }
