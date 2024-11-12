@@ -53,10 +53,9 @@ public class PlayerController : MonoBehaviour
     public float WalljumpVerticalForceModifier;
 
     public bool CornerBoost;
-    public float CornerBoostDuration;
-    public float CoefCornerBoostDash;
-    public float CoefCornerBoostJump;
+    public float CornerBoostDuration;    
     public float CoefCornerBoostHorizontalSpeed;
+    public float VitesseHorizontalModifiee;
 
     private void Awake()
     {
@@ -280,10 +279,7 @@ public class PlayerController : MonoBehaviour
     public IEnumerator CornerBoostReset()
     {
         yield return new WaitForSeconds(CornerBoostDuration);
-        DashSpeed = (DashSpeed / CoefCornerBoostDash);
-        DashDistance = (DashDistance / CoefCornerBoostDash);
-        jumpForce = jumpForce / CoefCornerBoostJump;
-        horizontalSpeed = horizontalSpeed / CoefCornerBoostHorizontalSpeed;
+        
         CornerBoost = false;
     }
     public void GravityReset()
@@ -343,17 +339,11 @@ public class PlayerController : MonoBehaviour
     }
     public void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Corner") && !CornerBoost && (isDashing || isJumping))
+        if (other.gameObject.CompareTag("Corner") && !CornerBoost && (isDashing || isJumping) &&!onGround)
         {
-            StartCoroutine(CornerBoostReset());
-            DashDistance *= CoefCornerBoostDash;
-            DashSpeed *= CoefCornerBoostDash;
-            jumpForce *= CoefCornerBoostJump;
-            horizontalSpeed *= CoefCornerBoostHorizontalSpeed;
+            StartCoroutine(CornerBoostReset());            
+            VitesseHorizontalModifiee = CoefCornerBoostHorizontalSpeed * horizontalSpeed;
             CornerBoost = true;
-
         }
-    }
-    
-
+    }  
 }

@@ -841,7 +841,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8270833652943281666, guid: 39dfdec4b1e904b4abd801cd37820975, type: 3}
       propertyPath: CoefCornerBoostDash
-      value: 1.7
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8270833652943281666, guid: 39dfdec4b1e904b4abd801cd37820975, type: 3}
       propertyPath: CoefCornerBoostJump
