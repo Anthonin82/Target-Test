@@ -343,7 +343,7 @@ public class PlayerController : MonoBehaviour
     }
     public void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Corner") && !CornerBoost)
+        if (other.gameObject.CompareTag("Corner") && !CornerBoost && (isDashing || isJumping))
         {
             StartCoroutine(CornerBoostReset());
             DashDistance *= CoefCornerBoostDash;
