@@ -52,6 +52,12 @@ public class PlayerController : MonoBehaviour
     public float TimerInterdiction;
     public float WalljumpVerticalForceModifier;
 
+    public bool CornerBoost;
+    public float CornerBoostDuration;
+    public float CoefCornerBoostDash;
+    public float CoefCornerBoostJump;
+    public float CoefCornerBoostHorizontalSpeed;
+
     private void Awake()
     {
         defaultGravityScale = rb.gravityScale;
@@ -244,7 +250,7 @@ public class PlayerController : MonoBehaviour
         
         yield return new WaitForSeconds(DashDistance/DashSpeed);          
         rb.velocity =  new Vector2 (0, rb.velocity.y); 
-        isDashing = false;
+        isDashing = false;        
         rb.gravityScale = defaultGravityScale; 
 
 
@@ -270,6 +276,15 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(TimerInterdiction);
         InterdictionRight = false;
+    }
+    public IEnumerator CornerBoostReset()
+    {
+        yield return new WaitForSeconds(CornerBoostDuration);
+        DashSpeed = (DashSpeed / CoefCornerBoostDash);
+        DashDistance = (DashDistance / CoefCornerBoostDash);
+        jumpForce = jumpForce / CoefCornerBoostJump;
+        horizontalSpeed = horizontalSpeed / CoefCornerBoostHorizontalSpeed;
+        CornerBoost = false;
     }
     public void GravityReset()
     {        
@@ -326,5 +341,19 @@ public class PlayerController : MonoBehaviour
         StartCoroutine("DashTimer");
 
     }
+    public void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Corner") && !CornerBoost)
+        {
+            StartCoroutine(CornerBoostReset());
+            DashDistance *= CoefCornerBoostDash;
+            DashSpeed *= CoefCornerBoostDash;
+            jumpForce *= CoefCornerBoostJump;
+            horizontalSpeed *= CoefCornerBoostHorizontalSpeed;
+            CornerBoost = true;
+
+        }
+    }
+    
 
 }
