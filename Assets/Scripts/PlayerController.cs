@@ -280,8 +280,9 @@ public class PlayerController : MonoBehaviour
     }
     public IEnumerator CornerBoostReset()
     {
+        PlayerSR.color = Color.red;
         yield return new WaitForSeconds(CornerBoostDuration);
-        
+        PlayerSR.color = Color.white;
         inCornerBoostState = false;
     }
     public void GravityReset()

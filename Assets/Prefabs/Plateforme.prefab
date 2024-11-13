@@ -249,7 +249,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1715172017800510288}
   - component: {fileID: 5722733251899815774}
-  - component: {fileID: 3442566610532157253}
   m_Layer: 0
   m_Name: Coin3
   m_TagString: Corner
@@ -317,18 +316,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &3442566610532157253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7729893139851911502}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b694619deb7f0af49b836fca93b8f7c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7848030124698263962
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,7 +326,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1353804071951055059}
   - component: {fileID: 7177418221929327931}
-  - component: {fileID: 880072236089367645}
   m_Layer: 0
   m_Name: Coin4
   m_TagString: Corner
@@ -407,18 +393,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &880072236089367645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7848030124698263962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b694619deb7f0af49b836fca93b8f7c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8452532281769016763
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,7 +403,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2772828367326816046}
   - component: {fileID: 5663527990213762766}
-  - component: {fileID: 572802624711658145}
   m_Layer: 0
   m_Name: Coin2
   m_TagString: Corner
@@ -497,15 +470,3 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &572802624711658145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8452532281769016763}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b694619deb7f0af49b836fca93b8f7c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
