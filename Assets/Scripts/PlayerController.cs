@@ -254,7 +254,6 @@ public class PlayerController : MonoBehaviour
         isDashing = false;        
         rb.gravityScale = defaultGravityScale; 
 
-
     }
     public IEnumerator ColorChangeWallJump()
     {
