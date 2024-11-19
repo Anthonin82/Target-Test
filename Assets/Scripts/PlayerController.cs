@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public float TimerGravityReset;
     public float JumpingGravityCoefficient;
 
+    public Vector3 PlayerStart;
     public LayerMask wallLayer;
     public float wallDetectionHorizontalDistance = 0.1f;
     public float wallDetectionVerticalDistance = 1f;
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         defaultGravityScale = rb.gravityScale;
+        PlayerStart = rb.position;
     }
 
     private void Update()
@@ -203,7 +205,7 @@ public class PlayerController : MonoBehaviour
             rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
         }
 
-        if (pressingDash && !onWall && DashAvailable && !isDashing)
+        if (pressingDash && DashAvailable && !isDashing)
         {
             OnDash();           
         }

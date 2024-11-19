@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -7128902301706698982}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -116,7 +116,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!70 &746383434597641108
 CapsuleCollider2D:
@@ -165,11 +165,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 273a86152b34a6b49bcc9f83e065ce7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerSR: {fileID: 0}
+  PlayerSR: {fileID: 8253430144046707916}
   rb: {fileID: 3122276835004794325}
   horizontalSpeed: 10
-  TimerGravityReset: 0
-  JumpingGravityCoefficient: 0
+  TimerGravityReset: 0.5
+  JumpingGravityCoefficient: 0.5
   wallLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -181,8 +181,8 @@ MonoBehaviour:
   onGround: 0
   isJumping: 0
   reachedJumpApexThisFrame: 0
-  jumpForce: 800
-  WallJumpHorizontalForce: 200
+  jumpForce: 1000
+  WallJumpHorizontalForce: 400
   TimerJumpApex: 0
   Gravityneeded: 0
   DoubleJumpAvailable: 0
@@ -199,11 +199,11 @@ MonoBehaviour:
   RecentlyOnRightWall: 0
   InterdictionLeft: 0
   InterdictionRight: 0
-  TimerInterdiction: 0
-  WalljumpVerticalForceModifier: 0
+  TimerInterdiction: 0.27
+  WalljumpVerticalForceModifier: 0.8
   inCornerBoostState: 0
-  CornerBoostDuration: 0
-  CoefCornerBoostHorizontalSpeed: 0
+  CornerBoostDuration: 1.5
+  CoefCornerBoostHorizontalSpeed: 2
 --- !u!114 &-7128902301706698982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,6 +216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80ea9a64570f400438717dc4f60f772e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NBTargetRestant: 3
 --- !u!1 &2976495416769300035
 GameObject:
   m_ObjectHideFlags: 0
