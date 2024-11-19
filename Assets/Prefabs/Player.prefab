@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3122276835004794325}
   - component: {fileID: 746383434597641108}
   - component: {fileID: 8270833652943281666}
+  - component: {fileID: -7128902301706698982}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -164,8 +165,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 273a86152b34a6b49bcc9f83e065ce7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerSR: {fileID: 0}
   rb: {fileID: 3122276835004794325}
   horizontalSpeed: 10
+  TimerGravityReset: 0
+  JumpingGravityCoefficient: 0
   wallLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -178,6 +182,10 @@ MonoBehaviour:
   isJumping: 0
   reachedJumpApexThisFrame: 0
   jumpForce: 800
+  WallJumpHorizontalForce: 200
+  TimerJumpApex: 0
+  Gravityneeded: 0
+  DoubleJumpAvailable: 0
   leftPlayerSide: {fileID: 8243065459878164444}
   rightPlayerSide: {fileID: 8442095125623290663}
   bottomPlayerSide: {fileID: 1100338019279446357}
@@ -187,6 +195,27 @@ MonoBehaviour:
   DashAvailable: 0
   isDashing: 0
   CoefSpeedDashDown: 2
+  RecentlyOnleftWall: 0
+  RecentlyOnRightWall: 0
+  InterdictionLeft: 0
+  InterdictionRight: 0
+  TimerInterdiction: 0
+  WalljumpVerticalForceModifier: 0
+  inCornerBoostState: 0
+  CornerBoostDuration: 0
+  CoefCornerBoostHorizontalSpeed: 0
+--- !u!114 &-7128902301706698982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675418745117150476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80ea9a64570f400438717dc4f60f772e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2976495416769300035
 GameObject:
   m_ObjectHideFlags: 0
