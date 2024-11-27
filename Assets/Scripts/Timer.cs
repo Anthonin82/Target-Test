@@ -1,17 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Manager : MonoBehaviour
 {
     public float ValeurTimer = 0f;
     public CompteurTarget compteurTarget;
     public bool Jeufini;
+    public TextMeshProUGUI affichageTimer;
 
     void Update()
     {
+
         Timer();
         if (Jeufini)
         {
@@ -24,6 +28,7 @@ public class Manager : MonoBehaviour
         if (compteurTarget.NBTargetRestant != 0)
         {
             ValeurTimer = Time.time;
+            affichageTimer.text = ValeurTimer.ToString("F2");
 
         }
         else if (!Jeufini)

@@ -70,9 +70,6 @@ public class PlayerController : MonoBehaviour
         pressingUp = Input.GetKey(KeyCode.W);
         pressingDown = Input.GetKey(KeyCode.S);
 
-        
-        
-
         if (!pressingDash) 
         {
             pressingDash = Input.GetKeyDown(KeyCode.Space);
@@ -92,8 +89,6 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
-
         if (onLeftWall && !Physics2D.BoxCast(leftPlayerSide.position, new Vector2(wallDetectionHorizontalDistance, wallDetectionVerticalDistance), 0, Vector2.left, 0, wallLayer) )//on rentre la dedans quand on quitte le mur cette frame-ci
         {
             
@@ -117,7 +112,6 @@ public class PlayerController : MonoBehaviour
         {
             RecentlyOnRightWall = true;
         }
-
 
         if (!onGround && Physics2D.Raycast(bottomPlayerSide.position, Vector2.down, 0.01f, wallLayer))
         {
@@ -244,9 +238,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             Debug.LogError("Error");
-        }
-         
-
+        }      
     }
     public IEnumerator DashTimer()
     {
