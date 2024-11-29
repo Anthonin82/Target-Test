@@ -6,12 +6,11 @@ using UnityEngine.UI;
 public class UIImageManager : MonoBehaviour
 {
     public Image[] UIimages;    
-    public int TargetRestanteIndex;
+    public int TargetRestanteIndex = 3;
     
-    public void UIDisabler(int Random)
+    public void UIUpdater()
     {
-        TargetRestanteIndex = Random;
-        UIimages[TargetRestanteIndex].gameObject.SetActive(false);
-
+        UIimages[TargetRestanteIndex-1].enabled = false;
+        TargetRestanteIndex--;
     }
 }

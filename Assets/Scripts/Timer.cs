@@ -12,6 +12,7 @@ public class Manager : MonoBehaviour
     public CompteurTarget compteurTarget;
     public bool Jeufini;
     public TextMeshProUGUI affichageTimer;
+    public UIImageManager ImageManager;
 
     void Update()
     {
@@ -38,6 +39,5 @@ public class Manager : MonoBehaviour
         }
 
     }
-    
-    
+   
 }

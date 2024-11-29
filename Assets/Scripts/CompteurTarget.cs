@@ -13,6 +13,7 @@ public class CompteurTarget : MonoBehaviour
             
             NBTargetRestant -= 1;
             Destroy(other.gameObject);
+            UIImageManager.UIUpdater();
         }
     }
 
