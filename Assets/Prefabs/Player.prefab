@@ -168,8 +168,12 @@ MonoBehaviour:
   PlayerSR: {fileID: 8253430144046707916}
   rb: {fileID: 3122276835004794325}
   horizontalSpeed: 10
+  maxHorizontalSpeed: 40
+  horizontalAccel: 60
+  horizontalDecel: 10
   TimerGravityReset: 0.5
   JumpingGravityCoefficient: 0.5
+  PlayerStart: {x: 0, y: 0, z: 0}
   wallLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -181,7 +185,7 @@ MonoBehaviour:
   onGround: 0
   isJumping: 0
   reachedJumpApexThisFrame: 0
-  jumpForce: 1000
+  jumpForce: 1100
   WallJumpHorizontalForce: 400
   TimerJumpApex: 0
   Gravityneeded: 0
@@ -194,16 +198,17 @@ MonoBehaviour:
   DashDistance: 5
   DashAvailable: 0
   isDashing: 0
-  CoefSpeedDashDown: 2
+  CoefSpeedDashDown: 1.3
   RecentlyOnleftWall: 0
   RecentlyOnRightWall: 0
   InterdictionLeft: 0
   InterdictionRight: 0
   TimerInterdiction: 0.27
-  WalljumpVerticalForceModifier: 0.8
+  WalljumpVerticalForceModifier: 1.2
   inCornerBoostState: 0
   CornerBoostDuration: 1.5
   CoefCornerBoostHorizontalSpeed: 2
+  debugActivateCornerBoost: 0
 --- !u!114 &-7128902301706698982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,6 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80ea9a64570f400438717dc4f60f772e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UIImageManager: {fileID: 0}
   NBTargetRestant: 3
 --- !u!1 &2976495416769300035
 GameObject:

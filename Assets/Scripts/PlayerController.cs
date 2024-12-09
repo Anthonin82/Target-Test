@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -7,6 +8,9 @@ public class PlayerController : MonoBehaviour
     public SpriteRenderer PlayerSR;
     public Rigidbody2D rb;
     public float horizontalSpeed;
+    public float maxHorizontalSpeed;
+    public float horizontalAccel;
+    public float horizontalDecel;
     [HideInInspector] float defaultGravityScale;
     public float TimerGravityReset;
     public float JumpingGravityCoefficient;
@@ -16,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public float wallDetectionHorizontalDistance = 0.1f;
     public float wallDetectionVerticalDistance = 1f;
 
+    
     public bool onLeftWall;
     public bool onRightWall;
     public bool onWall;
@@ -117,24 +122,49 @@ public class PlayerController : MonoBehaviour
         {
             LandingOnGround();
         }
-
+        
         onGround = Physics2D.Raycast(bottomPlayerSide.position, Vector2.down, 0.01f, wallLayer);
 
         float currentFrameCornerBoostCoeff;
-        if (inCornerBoostState) { currentFrameCornerBoostCoeff = CoefCornerBoostHorizontalSpeed; } else { currentFrameCornerBoostCoeff = 1f; }
+        currentFrameCornerBoostCoeff = inCornerBoostState ? CoefCornerBoostHorizontalSpeed : 1f;
+
+        float horizontalSpeedGoal;
 
         if (pressingLeft && !pressingRight && !onLeftWall && !isDashing && !InterdictionLeft)
         {
-            rb.velocity = new Vector2(-horizontalSpeed * currentFrameCornerBoostCoeff, rb.velocity.y);
+            horizontalSpeedGoal = -horizontalSpeed * currentFrameCornerBoostCoeff;
         }
         else if (pressingRight && !pressingLeft && !onRightWall && !isDashing && !InterdictionRight)
         {
-            rb.velocity = new Vector2(horizontalSpeed * currentFrameCornerBoostCoeff, rb.velocity.y);
+            horizontalSpeedGoal = horizontalSpeed * currentFrameCornerBoostCoeff;
         }
         else if (!pressingLeft && !pressingRight && !isDashing)
         {
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            horizontalSpeedGoal = 0;
         }
+        else
+        {
+            horizontalSpeedGoal = rb.velocity.x;
+        }
+
+        if(!isDashing && Mathf.Abs(rb.velocity.x) > maxHorizontalSpeed) //on cap la vitesse a la vitesse max autorisée
+        {
+            rb.velocity = new Vector2(maxHorizontalSpeed * Mathf.Sign(rb.velocity.x), rb.velocity.y);
+        }
+        
+        
+        if((horizontalSpeedGoal > 0 && rb.velocity.x > horizontalSpeed) || (horizontalSpeedGoal < 0 && rb.velocity.x < -horizontalSpeed))
+        {
+            rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, horizontalSpeedGoal, horizontalDecel * Time.fixedDeltaTime), rb.velocity.y);
+        }
+        else
+        {
+            rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, horizontalSpeedGoal, horizontalAccel * Time.fixedDeltaTime), rb.velocity.y);
+        }
+        
+
+        
+
 
         if (pressingJump  && !isJumping )// could be onGround and jumping, since the onGround check could be a bit too wide
         {
@@ -183,6 +213,12 @@ public class PlayerController : MonoBehaviour
                     }
                     rb.AddForce(Vector2.up * jumpForce);
                     DoubleJumpAvailable = false;
+
+                    if((pressingRight && rb.velocity.x < 0) || (pressingLeft && rb.velocity.x > 0))
+                    {
+                        rb.velocity = new Vector2(-rb.velocity.x, rb.velocity.y);
+                    }
+
                 }
             }
           
@@ -243,9 +279,16 @@ public class PlayerController : MonoBehaviour
     public IEnumerator DashTimer()
     {
         
-        yield return new WaitForSeconds(DashDistance/DashSpeed);          
-        rb.velocity =  new Vector2 (0, rb.velocity.y); 
-        isDashing = false;        
+        Vector2 preDashVelocity = rb.velocity;
+
+        yield return new WaitForSeconds(DashDistance/DashSpeed);
+
+        if ((rb.velocity.x > 0 && preDashVelocity.x > rb.velocity.x)|| (rb.velocity.x < 0 && preDashVelocity.x < rb.velocity.x))
+        {
+            rb.velocity = new Vector2(preDashVelocity.x, rb.velocity.y);
+        }
+
+        isDashing = false;
         rb.gravityScale = defaultGravityScale; 
 
     }
@@ -326,16 +369,20 @@ public class PlayerController : MonoBehaviour
         {
             DashAngle = DashAngle * CoefSpeedDashDown;
         }
+        
+        StartCoroutine("ColorChangeDash");
+        StartCoroutine(DashTimer());
+
         rb.velocity = new Vector2(DashAngle.x * DashSpeed, DashAngle.y * DashSpeed);
         DashAvailable = false;
-        //GravityReset();
-        StartCoroutine("ColorChangeDash");
-        StartCoroutine("DashTimer");
 
     }
+    //time 0.25, mult 2
+
+    public bool debugActivateCornerBoost;
     public void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Corner") && !inCornerBoostState && (isDashing || isJumping) &&!onGround)
+        if (debugActivateCornerBoost && other.gameObject.CompareTag("Corner") && !inCornerBoostState && (isDashing || isJumping) &&!onGround)
         {
             StartCoroutine(CornerBoostReset());            
             inCornerBoostState = true;
