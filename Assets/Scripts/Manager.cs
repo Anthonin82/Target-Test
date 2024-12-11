@@ -13,6 +13,7 @@ public class Manager : MonoBehaviour
     public bool Jeufini;
     public TextMeshProUGUI affichageTimer;
     public UIImageManager ImageManager;
+    
 
     public void Awake()
     {
