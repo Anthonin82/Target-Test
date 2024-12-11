@@ -802,7 +802,7 @@ PrefabInstance:
     - target: {fileID: -7128902301706698982, guid: 39dfdec4b1e904b4abd801cd37820975, type: 3}
       propertyPath: UIImageManager
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 7885187826715409048}
     - target: {fileID: 1675418745117150476, guid: 39dfdec4b1e904b4abd801cd37820975, type: 3}
       propertyPath: m_Name
       value: Player

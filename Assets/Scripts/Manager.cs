@@ -9,16 +9,12 @@ using UnityEngine.UI;
 public class Manager : MonoBehaviour
 {
     public float ValeurTimer = 0f;
-    public CompteurTarget compteurTarget;
     public bool Jeufini;
     public TextMeshProUGUI affichageTimer;
     public UIImageManager ImageManager;
     
 
-    public void Awake()
-    {
-        compteurTarget = PlayerController.instance.GetComponent<CompteurTarget>();  
-    }
+    
     void Update()
     {
 
@@ -36,7 +32,7 @@ public class Manager : MonoBehaviour
     }
     public void Timer()
     {
-        if (compteurTarget.NBTargetRestant != 0)
+        if (PlayerController.instance.GetComponent<CompteurTarget>().NBTargetRestant != 0)
         {
             ValeurTimer = Time.time;
             affichageTimer.text = ValeurTimer.ToString("F2");

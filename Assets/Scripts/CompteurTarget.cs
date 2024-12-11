@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class CompteurTarget : MonoBehaviour
 {
-    public UIImageManager UIImageManager;
     public int NBTargetRestant = 3;
 
     public void Awake()
@@ -18,7 +17,7 @@ public class CompteurTarget : MonoBehaviour
             
             NBTargetRestant -= 1;
             Destroy(other.gameObject);
-            UIImageManager.UIUpdater();
+            UIImageManager.Instance.UIUpdater();
         }
     }
 
