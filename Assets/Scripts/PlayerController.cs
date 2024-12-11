@@ -62,8 +62,15 @@ public class PlayerController : MonoBehaviour
     public float CornerBoostDuration;    
     public float CoefCornerBoostHorizontalSpeed;
 
+    public static PlayerController instance;
+
     private void Awake()
     {
+        if (instance != null) 
+        {
+            Debug.LogError("jlfl");
+        }
+        instance = this;
         defaultGravityScale = rb.gravityScale;
         PlayerStart = rb.position;
     }

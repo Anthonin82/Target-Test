@@ -14,6 +14,10 @@ public class Manager : MonoBehaviour
     public TextMeshProUGUI affichageTimer;
     public UIImageManager ImageManager;
 
+    public void Awake()
+    {
+        compteurTarget = PlayerController.instance.GetComponent<CompteurTarget>();  
+    }
     void Update()
     {
 
@@ -22,6 +26,11 @@ public class Manager : MonoBehaviour
         {
             Scene sceneLoaded = SceneManager.GetActiveScene();
             SceneManager.LoadScene(sceneLoaded.buildIndex + 1);
+            /*foreach(Image image in ImageManager.UIimages)
+            {
+                image.enabled = true;
+            }*/
+            
         }
     }
     public void Timer()
