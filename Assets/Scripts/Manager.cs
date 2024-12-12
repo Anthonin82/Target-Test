@@ -23,10 +23,7 @@ public class Manager : MonoBehaviour
         {
             Scene sceneLoaded = SceneManager.GetActiveScene();
             SceneManager.LoadScene(sceneLoaded.buildIndex + 1);
-            /*foreach(Image image in ImageManager.UIimages)
-            {
-                image.enabled = true;
-            }*/
+            
             
         }
     }
@@ -34,13 +31,13 @@ public class Manager : MonoBehaviour
     {
         if (PlayerController.instance.GetComponent<CompteurTarget>().NBTargetRestant != 0)
         {
-            ValeurTimer = Time.time;
+            ValeurTimer = Time.time - Jouer.instance.timeInMenu;
             affichageTimer.text = ValeurTimer.ToString("F2");
 
         }
         else if (!Jeufini)
         {
-            ValeurTimer = Time.time;
+            ValeurTimer = Time.time - Jouer.instance.timeInMenu;
             Jeufini = true;
         }
 
