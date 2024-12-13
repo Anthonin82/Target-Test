@@ -80,7 +80,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dd80efd1fe94e9444aea9a2898014963, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -221,7 +221,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80ea9a64570f400438717dc4f60f772e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIImageManager: {fileID: 0}
   NBTargetRestant: 3
 --- !u!1 &2976495416769300035
 GameObject:
