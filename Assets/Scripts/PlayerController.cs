@@ -64,6 +64,7 @@ public class PlayerController : MonoBehaviour
 
     public static PlayerController instance;
 
+    
     private void Awake()
     {
         if (instance != null) 
@@ -140,10 +141,12 @@ public class PlayerController : MonoBehaviour
         if (pressingLeft && !pressingRight && !onLeftWall && !isDashing && !InterdictionLeft)
         {
             horizontalSpeedGoal = -horizontalSpeed * currentFrameCornerBoostCoeff;
+            PlayerSR.flipX = true;
         }
         else if (pressingRight && !pressingLeft && !onRightWall && !isDashing && !InterdictionRight)
         {
             horizontalSpeedGoal = horizontalSpeed * currentFrameCornerBoostCoeff;
+            PlayerSR.flipX = false;
         }
         else if (!pressingLeft && !pressingRight && !isDashing)
         {
