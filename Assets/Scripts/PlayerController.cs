@@ -172,10 +172,6 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, horizontalSpeedGoal, horizontalAccel * Time.fixedDeltaTime), rb.velocity.y);
         }
         
-
-        
-
-
         if (pressingJump  && !isJumping )// could be onGround and jumping, since the onGround check could be a bit too wide
         {
             if (onGround)
@@ -310,7 +306,7 @@ public class PlayerController : MonoBehaviour
     }
     public IEnumerator ColorChangeDash() 
     { 
-        PlayerSR.color = Color.blue;
+        PlayerSR.color = Color.yellow;
         yield return new WaitForSeconds(0.5f);
         PlayerSR.color = Color.white;
     }
