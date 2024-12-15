@@ -13,17 +13,14 @@ public class Manager : MonoBehaviour
     public TextMeshProUGUI affichageTimer;
     public UIImageManager ImageManager;
     
-
     
     void Update()
     {
-
+       
         Timer();
         if (Jeufini)
-        {
-            Scene sceneLoaded = SceneManager.GetActiveScene();
-            SceneManager.LoadScene(sceneLoaded.buildIndex + 1);
-            
+        {            
+            SceneManager.LoadScene(1);           
             
         }
     }
@@ -42,5 +39,6 @@ public class Manager : MonoBehaviour
         }
 
     }
+  
    
 }

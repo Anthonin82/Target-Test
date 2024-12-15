@@ -62,6 +62,8 @@ public class PlayerController : MonoBehaviour
     public float CornerBoostDuration;    
     public float CoefCornerBoostHorizontalSpeed;
 
+    public Animator animator;
+
     public static PlayerController instance;
 
     
@@ -102,6 +104,10 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        animator.SetBool("isDashing", isDashing);
+        animator.SetFloat("VerticalVelocity",rb.velocity.y);
+        animator.SetBool("isJumping", isJumping);
+        
         if (onLeftWall && !Physics2D.BoxCast(leftPlayerSide.position, new Vector2(wallDetectionHorizontalDistance, wallDetectionVerticalDistance), 0, Vector2.left, 0, wallLayer) )//on rentre la dedans quand on quitte le mur cette frame-ci
         {
             
@@ -132,6 +138,7 @@ public class PlayerController : MonoBehaviour
         }
         
         onGround = Physics2D.Raycast(bottomPlayerSide.position, Vector2.down, 0.01f, wallLayer);
+        animator.SetBool("onGround", onGround);
 
         float currentFrameCornerBoostCoeff;
         currentFrameCornerBoostCoeff = inCornerBoostState ? CoefCornerBoostHorizontalSpeed : 1f;
@@ -178,14 +185,16 @@ public class PlayerController : MonoBehaviour
             {
                 StartCoroutine("JumpTimer");
                 isJumping = true;
+                animator.SetBool("isJumping", isJumping);
                 rb.AddForce(Vector2.up * jumpForce);
                 rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
+                
             }         
             if (!onGround)
-            {
-                 
+            {                 
                 if (RecentlyOnleftWall && pressingRight)
                 {
+                    animator.SetBool("isJumping", true);
                     InterdictionLeft = true;
                     StartCoroutine("TimerInterdictionLeft");
                     rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
@@ -198,6 +207,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (RecentlyOnRightWall && pressingLeft)
                 {
+                    animator.SetBool("isJumping", true);
                     InterdictionRight = true;
                     StartCoroutine("TimerInterdictionRight");
                     rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
@@ -209,9 +219,11 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (DoubleJumpAvailable && !onWall && !isDashing)
                 {
+                    
                     StopCoroutine(JumpTimer());
                     StartCoroutine("JumpTimer");
                     isJumping = true;
+                    animator.SetBool("isJumping", isJumping);
                     rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
                     if (rb.velocity.y < 0)
                     {
@@ -376,6 +388,7 @@ public class PlayerController : MonoBehaviour
             DashAngle = DashAngle * CoefSpeedDashDown;
         }
         
+        animator.SetBool("isDashing", isDashing);
         StartCoroutine("ColorChangeDash");
         StartCoroutine(DashTimer());
 

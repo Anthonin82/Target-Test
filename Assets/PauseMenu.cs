@@ -1,0 +1,41 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+public class PauseMenu : MonoBehaviour
+{
+    public static bool gamePaused;
+    public GameObject retryButton;
+
+    public void Start()
+    {
+        gamePaused = false ;
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!gamePaused)
+            {
+                Paused();
+            }            
+        }
+        
+    }
+    public void Retry()
+    {
+        Scene sceneLoaded = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(sceneLoaded.buildIndex);
+        Time.timeScale = 1.0f;
+    }
+    public void Paused() 
+    {
+        retryButton.SetActive(true);
+        gamePaused = true;
+        Time.timeScale = 0;
+    }
+}
