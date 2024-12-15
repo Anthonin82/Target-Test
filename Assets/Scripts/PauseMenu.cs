@@ -9,6 +9,7 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool gamePaused;
     public GameObject retryButton;
+    public GameObject retourSelectionNiveauButton;
 
     public void Start()
     {
@@ -32,9 +33,15 @@ public class PauseMenu : MonoBehaviour
         SceneManager.LoadScene(sceneLoaded.buildIndex);
         Time.timeScale = 1.0f;
     }
+    public void RetourSelectionNiveau()
+    {
+        SceneManager.LoadScene(1);
+        Time.timeScale = 1.0f;
+    }
     public void Paused() 
     {
         retryButton.SetActive(true);
+        retourSelectionNiveauButton.SetActive(true);
         gamePaused = true;
         Time.timeScale = 0;
     }
