@@ -26,10 +26,7 @@ public class LevelManager : MonoBehaviour
         }
 
     }
-    public void Start()
-    {
-        Debug.Log(meilleursScores[0]);
-    }
+    
     public void Update()
     { 
         for (int i = 0; i < scoresText.Length; i++)
