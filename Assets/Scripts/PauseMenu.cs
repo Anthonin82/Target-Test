@@ -8,8 +8,7 @@ using UnityEngine.UI;
 public class PauseMenu : MonoBehaviour
 {
     public static bool gamePaused;
-    public GameObject retryButton;
-    public GameObject retourSelectionNiveauButton;
+    public GameObject pausePanel;
 
     public void Start()
     {
@@ -40,8 +39,7 @@ public class PauseMenu : MonoBehaviour
     }
     public void Paused() 
     {
-        retryButton.SetActive(true);
-        retourSelectionNiveauButton.SetActive(true);
+        pausePanel.SetActive(true);        
         gamePaused = true;
         Time.timeScale = 0;
     }
