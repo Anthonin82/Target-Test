@@ -205,7 +205,7 @@ public class PlayerController : MonoBehaviour
                     rb.AddForce(new Vector2(WallJumpHorizontalForce, jumpForce * WalljumpVerticalForceModifier));
                     isJumping = false;
                     GravityReset();
-                    StartCoroutine("ColorChangeWallJump");
+                    //StartCoroutine("ColorChangeWallJump");
 
                 }
                 else if (RecentlyOnRightWall && pressingLeft)
@@ -218,7 +218,7 @@ public class PlayerController : MonoBehaviour
                     rb.AddForce(new Vector2(-WallJumpHorizontalForce, jumpForce * WalljumpVerticalForceModifier));
                     isJumping = false;
                     GravityReset();
-                    StartCoroutine("ColorChangeWallJump");
+                    //StartCoroutine("ColorChangeWallJump");
                 }
                 else if (DoubleJumpAvailable && !onWall && !isDashing)
                 {
@@ -309,7 +309,8 @@ public class PlayerController : MonoBehaviour
         rb.gravityScale = defaultGravityScale; 
 
     }
-    public IEnumerator ColorChangeWallJump()
+    // Les deux coroutine suivante nous ont servies pendant les phases de test à bien vérifier l'état du personnage ( quand il est entrain de walljump ou de dash )
+    /*public IEnumerator ColorChangeWallJump()
     {
         PlayerSR.color = Color.black;
         yield return new WaitForSeconds(0.5f);
@@ -320,7 +321,7 @@ public class PlayerController : MonoBehaviour
         PlayerSR.color = Color.yellow;
         yield return new WaitForSeconds(0.5f);
         PlayerSR.color = Color.white;
-    }
+    }*/
     public IEnumerator TimerInterdictionLeft()
     {
         yield return new WaitForSeconds(TimerInterdiction);
@@ -388,7 +389,7 @@ public class PlayerController : MonoBehaviour
         }
         
         animator.SetBool("isDashing", isDashing);
-        StartCoroutine("ColorChangeDash");
+        //StartCoroutine("ColorChangeDash");
         StartCoroutine(DashTimer());
 
         rb.velocity = new Vector2(DashAngle.x * DashSpeed, DashAngle.y * DashSpeed);
