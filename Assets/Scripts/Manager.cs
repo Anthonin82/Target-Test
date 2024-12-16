@@ -4,12 +4,13 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class Manager : MonoBehaviour
 {
     public float ValeurTimer = 0f;
-    public float HighScore = 0;
+    public int lvlID;
     public bool Jeufini;
     public TextMeshProUGUI affichageTimer;
     public UIImageManager ImageManager;
@@ -35,10 +36,9 @@ public class Manager : MonoBehaviour
         if (Jeufini)
         {
             
-             if (ValeurTimer <= LevelManager.Instance.meilleursScores[loadedScene.buildIndex])
+             if (ValeurTimer <= PlayerPrefs.GetFloat("HighScore" + lvlID, 99999))
              {
-                HighScore = ValeurTimer;
-                Debug.Log(HighScore);
+                PlayerPrefs.SetFloat("HighScore"+lvlID, ValeurTimer);
                 
              }
             /*else

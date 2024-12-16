@@ -22,7 +22,7 @@ public class LevelManager : MonoBehaviour
         Instance = this;
         for (int i = 0; i < meilleursScores.Length; i++)
         {
-            meilleursScores[i] = Manager.managerInstance.HighScore;
+            meilleursScores[i] = PlayerPrefs.GetFloat("HighScore"+i, 99999);
         }
 
     }
