@@ -39,13 +39,14 @@ public class Manager : MonoBehaviour
              if (ValeurTimer <= PlayerPrefs.GetFloat("HighScore" + lvlID, 99999))
              {
                 PlayerPrefs.SetFloat("HighScore"+lvlID, ValeurTimer);
-                
-             }
-            /*else
+                SceneManager.LoadScene(1);
+
+            }
+            else
             {
                 SceneManager.LoadScene(1);
 
-            }*/
+            }
 
         }
     }

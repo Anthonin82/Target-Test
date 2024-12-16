@@ -31,7 +31,7 @@ public class LevelManager : MonoBehaviour
     { 
         for (int i = 0; i < scoresText.Length; i++)
         {
-            scoresText[i].text = meilleursScores[i].ToString();
+            scoresText[i].text = meilleursScores[i].ToString("F2");
         }
     }
     public void LevelSelection(int level)
