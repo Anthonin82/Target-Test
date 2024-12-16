@@ -178,7 +178,10 @@ public class PlayerController : MonoBehaviour
         {
             rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, horizontalSpeedGoal, horizontalAccel * Time.fixedDeltaTime), rb.velocity.y);
         }
-        
+        if (pressingDash && DashAvailable && !isDashing)
+        {
+            OnDash();
+        }
         if (pressingJump  && !isJumping )// could be onGround and jumping, since the onGround check could be a bit too wide
         {
             if (onGround)
@@ -252,11 +255,7 @@ public class PlayerController : MonoBehaviour
         {
             rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
         }
-
-        if (pressingDash && DashAvailable && !isDashing)
-        {
-            OnDash();           
-        }
+        
         if (pressingDash)
         {
             pressingDash = Input.GetKeyDown(KeyCode.Space);
