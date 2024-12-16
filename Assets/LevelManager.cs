@@ -33,6 +33,17 @@ public class LevelManager : MonoBehaviour
             scoresText[i].text = meilleursScores[i].ToString("F2");
         }
     }
+
+    [ContextMenu("Reset Scores")]
+    public void ResetScores()
+    {
+        for (int i = 0; i < meilleursScores.Length; i++)
+        {
+            PlayerPrefs.SetFloat("HighScore" + i, 99999);
+        }
+    }
+
+
     public void LevelSelection(int level)
     {
         SceneManager.LoadScene(level);
