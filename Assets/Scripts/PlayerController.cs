@@ -99,6 +99,12 @@ public class PlayerController : MonoBehaviour
             reachedJumpApexThisFrame = true;
         }
 
+        if(pressingDash || pressingJump || pressingLeft ||pressingRight || pressingDown || pressingUp)
+        {
+            Manager.managerInstance.OnKeyPressed();
+        }
+
+
     }
 
 

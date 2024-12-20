@@ -31,8 +31,12 @@ public class Manager : MonoBehaviour
     }
     void Update()
     {
-       
-        Timer();
+
+        if (timerStarted)
+        {
+            Timer();
+        }
+        
         if (Jeufini)
         {
             
@@ -50,20 +54,30 @@ public class Manager : MonoBehaviour
 
         }
     }
+    public float timeBeginPlay = float.NaN;
+    bool timerStarted = false;
     public void Timer()
     {
         if (PlayerController.instance.GetComponent<CompteurTarget>().NBTargetRestant != 0)
         {
-            ValeurTimer = Time.timeSinceLevelLoad;
+            ValeurTimer = Time.time - timeBeginPlay;
             affichageTimer.text = ValeurTimer.ToString("F2");
 
         }
         else if (!Jeufini)
         {
-            ValeurTimer = Time.timeSinceLevelLoad;
+            ValeurTimer = Time.time - timeBeginPlay;
             Jeufini = true;
         }
 
+    }
+    public void OnKeyPressed()
+    {
+        if (!timerStarted)
+        {
+            timerStarted = true;
+            timeBeginPlay = Time.time;
+        }        
     }
   
    
