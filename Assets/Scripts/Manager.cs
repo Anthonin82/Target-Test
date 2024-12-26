@@ -58,7 +58,7 @@ public class Manager : MonoBehaviour
     bool timerStarted = false;
     public void Timer()
     {
-        if (PlayerController.instance.GetComponent<CompteurTarget>().NBTargetRestant != 0)
+        if (PlayerMovement.instance.GetComponent<CompteurTarget>().NBTargetRestant != 0)
         {
             ValeurTimer = Time.time - timeBeginPlay;
             affichageTimer.text = ValeurTimer.ToString("F2");

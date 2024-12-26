@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
+
+    //TODO : Wavedash devrait cancel le dash et refresh le cd, pour qu on puisse empecher le saut pendant le dash et que ca soit pas cringe
+
     public SpriteRenderer PlayerSR;
     public Rigidbody2D rb;
     public float horizontalSpeed;
@@ -27,7 +30,7 @@ public class PlayerController : MonoBehaviour
     public bool onGround;   
 
     public bool isJumping = false;
-    bool pressingJump;
+    public bool pressingJump;
     public bool reachedJumpApexThisFrame = false;    
     public float jumpForce = 200f;
     public float WallJumpHorizontalForce = 200f;
@@ -39,10 +42,10 @@ public class PlayerController : MonoBehaviour
     public Transform rightPlayerSide;
     public Transform bottomPlayerSide;
 
-    bool pressingLeft;
-    bool pressingRight;
-    bool pressingUp;
-    bool pressingDown;
+    public bool pressingLeft;
+    public bool pressingRight;
+    public bool pressingUp;
+    public bool pressingDown;
 
     public bool pressingDash;        
     public float DashSpeed;
@@ -64,7 +67,7 @@ public class PlayerController : MonoBehaviour
 
     public Animator animator;
 
-    public static PlayerController instance;
+    public static PlayerMovement instance;
 
     
     private void Awake()
@@ -80,6 +83,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+
         pressingLeft = Input.GetKey(KeyCode.A);
         pressingRight = Input.GetKey(KeyCode.D);
         pressingUp = Input.GetKey(KeyCode.W);
