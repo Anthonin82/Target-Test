@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: -7154654860437469382}
   - component: {fileID: 6736406091140920482}
   - component: {fileID: 8577133026481790666}
+  - component: {fileID: 9161048055075469172}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -187,6 +188,8 @@ MonoBehaviour:
   onWall: 0
   onGround: 0
   isJumping: 0
+  pressingDownJump: 0
+  releasingJump: 0
   reachedJumpApexThisFrame: 0
   jumpForce: 1100
   WallJumpHorizontalForce: 400
@@ -196,7 +199,11 @@ MonoBehaviour:
   leftPlayerSide: {fileID: 8243065459878164444}
   rightPlayerSide: {fileID: 8442095125623290663}
   bottomPlayerSide: {fileID: 1100338019279446357}
-  pressingDash: 0
+  pressingLeft: 0
+  pressingRight: 0
+  pressingUp: 0
+  pressingDown: 0
+  pressingDownDash: 0
   DashSpeed: 20
   DashDistance: 5
   DashAvailable: 0
@@ -259,6 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83136cea183876f4ebc01852837e9393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movement: {fileID: 8270833652943281666}
 --- !u!114 &8577133026481790666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -271,8 +279,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: 0}
-  m_NotificationBehavior: 0
+  m_Actions: {fileID: -944628639613478452, guid: cb36947b177063f4eb89f7cfa15f9106, type: 3}
+  m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -283,12 +291,137 @@ MonoBehaviour:
   m_ControlsChangedEvent:
     m_PersistentCalls:
       m_Calls: []
-  m_ActionEvents: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6736406091140920482}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnJumpButton
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 2e52abd3-1542-4f8d-958e-98b8825fd75c
+    m_ActionName: clavier/saut[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6736406091140920482}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnDashButton
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 96437d92-9845-467f-8c4d-4b1a186429aa
+    m_ActionName: clavier/dash[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6736406091140920482}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnLeftButton
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b8071ba3-9cff-4386-b73d-b057de054ee7
+    m_ActionName: clavier/left[/Keyboard/a]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6736406091140920482}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnRightButton
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 0356260c-4796-47f5-9af6-3994c63ac3ad
+    m_ActionName: clavier/right[/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6736406091140920482}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnUpButton
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 36edd3d3-7e2c-4381-aa56-3c6a80e3767f
+    m_ActionName: clavier/up[/Keyboard/w]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6736406091140920482}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnDownButton
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 6f3408ed-9c4d-4528-b33d-fd8093376e10
+    m_ActionName: clavier/down[/Keyboard/s]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6736406091140920482}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnRetryButton
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d46f3a3e-b5aa-43cb-a789-4b19059e5c80
+    m_ActionName: clavier/retry[/Keyboard/p]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: 
+  m_DefaultActionMap: clavier
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &9161048055075469172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675418745117150476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe24c4b1f30287438910887f95b3964, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actions: {fileID: -944628639613478452, guid: cb36947b177063f4eb89f7cfa15f9106, type: 3}
 --- !u!1 &2976495416769300035
 GameObject:
   m_ObjectHideFlags: 0

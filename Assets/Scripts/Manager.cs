@@ -15,6 +15,7 @@ public class Manager : MonoBehaviour
     public TextMeshProUGUI affichageTimer;
     public UIImageManager ImageManager;
     public Scene loadedScene;
+    public PauseMenu pauseMenu;
 
     public static Manager managerInstance;
     public void Awake()

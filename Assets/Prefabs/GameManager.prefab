@@ -1024,12 +1024,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ValeurTimer: 0
-  HighScore: 17
+  lvlID: 0
   Jeufini: 0
   affichageTimer: {fileID: 1741344064670941851}
   ImageManager: {fileID: 5034479378614579170}
   loadedScene:
     m_Handle: 0
+  pauseMenu: {fileID: 284518081256430045}
+  timeBeginPlay: NaN
 --- !u!114 &5034479378614579170
 MonoBehaviour:
   m_ObjectHideFlags: 0

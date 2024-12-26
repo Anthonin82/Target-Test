@@ -24,10 +24,7 @@ public class PauseMenu : MonoBehaviour
                 Paused();
             }            
         }
-        if (Input.GetKeyDown(KeyCode.R)|| Input.GetKeyDown(KeyCode.O))
-        {
-            Retry();
-        }
+        
 
 
     }

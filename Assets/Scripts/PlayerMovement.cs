@@ -30,7 +30,8 @@ public class PlayerMovement : MonoBehaviour
     public bool onGround;   
 
     public bool isJumping = false;
-    public bool pressingJump;
+    public bool pressingDownJump;
+    public bool releasingJump;
     public bool reachedJumpApexThisFrame = false;    
     public float jumpForce = 200f;
     public float WallJumpHorizontalForce = 200f;
@@ -47,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
     public bool pressingUp;
     public bool pressingDown;
 
-    public bool pressingDash;        
+    public bool pressingDownDash;        
     public float DashSpeed;
     public float DashDistance;        
     public bool DashAvailable = false;
@@ -81,35 +82,7 @@ public class PlayerMovement : MonoBehaviour
         PlayerStart = rb.position;
     }
 
-    private void Update()
-    {
-
-        pressingLeft = Input.GetKey(KeyCode.A);
-        pressingRight = Input.GetKey(KeyCode.D);
-        pressingUp = Input.GetKey(KeyCode.W);
-        pressingDown = Input.GetKey(KeyCode.S);
-
-        if (!pressingDash) 
-        {
-            pressingDash = Input.GetKeyDown(KeyCode.Space);
-        }
-        if (!pressingJump)
-        {
-            pressingJump = Input.GetKeyDown(KeyCode.P);
-        }
-        
-        if (Input.GetKeyUp(KeyCode.P) && isJumping)
-        {            
-            reachedJumpApexThisFrame = true;
-        }
-
-        if(pressingDash || pressingJump || pressingLeft ||pressingRight || pressingDown || pressingUp)
-        {
-            Manager.managerInstance.OnKeyPressed();
-        }
-
-
-    }
+    
 
 
     private void FixedUpdate()
@@ -117,7 +90,12 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("isDashing", isDashing);
         animator.SetFloat("VerticalVelocity",rb.velocity.y);
         animator.SetBool("isJumping", isJumping);
-        
+
+        if (releasingJump && isJumping)
+        {
+            reachedJumpApexThisFrame = true;
+        }
+
         if (onLeftWall && !Physics2D.BoxCast(leftPlayerSide.position, new Vector2(wallDetectionHorizontalDistance, wallDetectionVerticalDistance), 0, Vector2.left, 0, wallLayer) )//on rentre la dedans quand on quitte le mur cette frame-ci
         {
             
@@ -188,11 +166,11 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, horizontalSpeedGoal, horizontalAccel * Time.fixedDeltaTime), rb.velocity.y);
         }
-        if (pressingDash && DashAvailable && !isDashing)
+        if (pressingDownDash && DashAvailable && !isDashing)
         {
             OnDash();
         }
-        if (pressingJump  && !isJumping )// could be onGround and jumping, since the onGround check could be a bit too wide
+        if (pressingDownJump  && !isJumping )// could be onGround and jumping, since the onGround check could be a bit too wide
         {
             if (onGround)
             {
@@ -265,16 +243,18 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
         }
+
+
+        //ces trois lignes ne peuvent être vraies que pour une frame de fixed update max.
+        pressingDownDash = false;
+        pressingDownJump = false;
+        releasingJump = false;
+
         
-        if (pressingDash)
-        {
-            pressingDash = Input.GetKeyDown(KeyCode.Space);
-        }
-        if (pressingJump)
-        {
-            pressingJump = Input.GetKeyDown(KeyCode.P);
-        }
+
     }
+    
+
     public void LandingOnGround()
     {
         rb.gravityScale = defaultGravityScale;

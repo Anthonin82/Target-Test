@@ -162,6 +162,13 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
         /// <param name="action"></param>
         /// <param name="bindingIndex"></param>
         /// <returns></returns>
+        /// 
+
+        private void Start()
+        {
+            UpdateBindingDisplay();
+        }
+
         public bool ResolveActionAndBinding(out InputAction action, out int bindingIndex)
         {
             bindingIndex = -1;

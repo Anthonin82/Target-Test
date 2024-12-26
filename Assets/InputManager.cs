@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,61 +7,90 @@ using UnityEngine.InputSystem;
 public class InputManager : MonoBehaviour
 {
     public PlayerMovement movement;
-
-
-
-
-    BoolWrapper wentThroughFixedUpdateSinceButtonPressed = new(false);
-
-    //exception 1 : si on part d une touche relachée, qu'on press et qu on relache avant fixed update,
-    //on veut quand même une frame ou la touche est press.
-    //exception 2 : si on part d une touche pressée, qu'on lache et qu on represse avant fixed update,
-    //on veut quand même une frame ou la touche est relachée.
-    //WARNING : cette expection 2 ne doit etre valable que pour le saut. 
-    //TODO : faire avec un event certainement, avec les coroutines nsm
-
     public void OnJumpButton(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            movement.pressingJump = true;
+            movement.pressingDownJump = true;
         }
-
         if (context.canceled)
         {
-            movement.pressingJump = false;
+            movement.releasingJump = true;
         }
     }
-
-
-
-
-
-
-
-    //dehors
-
-    public void SetAtEndNextFixedUpdate(BoolWrapper boolWrapper, bool futureValue)
+    public void OnDashButton(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            movement.pressingDownDash = true;
+        }
+        if (context.started)
+        {
+            Manager.managerInstance.OnKeyPressed();
+        }
+    }
+    public void OnLeftButton(InputAction.CallbackContext context)
     {
         
-        StartCoroutine(SetFalseAtEndNextFixedUpdateCoroutine(boolWrapper, futureValue));
-    }
-
-    public IEnumerator SetFalseAtEndNextFixedUpdateCoroutine(BoolWrapper wrapperValue, bool futureValue)
-    {
-        yield return new WaitForFixedUpdate();
-        (wrapperValue.value == futureValue).Assert(false);
-        wrapperValue.value = futureValue;
-    }
-
-    public class BoolWrapper
-    {
-        public BoolWrapper(bool initialValue)
+        if (context.started)
         {
-            value = initialValue;
+            movement.pressingLeft = true;
+            Manager.managerInstance.OnKeyPressed();
         }
-
-        public bool value;
+        if (context.canceled)
+        {
+            movement.pressingLeft = false;
+        }
     }
+    public void OnRightButton(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            movement.pressingRight = true;
+            Manager.managerInstance.OnKeyPressed();
+        }
+        if (context.canceled)
+        {
+            movement.pressingRight = false;
+        }
+    }
+    public void OnUpButton(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            movement.pressingUp = true;
+            Manager.managerInstance.OnKeyPressed();
+        }
+        if (context.canceled)
+        {
+            movement.pressingUp = false;
+        }
+    }
+    public void OnDownButton(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            movement.pressingDown = true;
+            Manager.managerInstance.OnKeyPressed();
+        }
+        if (context.canceled)
+        {
+            movement.pressingDown = false;
+        }
+    }
+
+    public void OnRetryButton(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Manager.managerInstance.pauseMenu.Retry();
+        }
+    }
+
+
+
+
+
+
 
 }
