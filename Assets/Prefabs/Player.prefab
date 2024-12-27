@@ -21,7 +21,7 @@ GameObject:
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -194,7 +194,6 @@ MonoBehaviour:
   jumpForce: 1100
   WallJumpHorizontalForce: 400
   TimerJumpApex: 0
-  Gravityneeded: 0
   DoubleJumpAvailable: 0
   leftPlayerSide: {fileID: 8243065459878164444}
   rightPlayerSide: {fileID: 8442095125623290663}
@@ -211,8 +210,8 @@ MonoBehaviour:
   CoefSpeedDashDown: 1.3
   RecentlyOnleftWall: 0
   RecentlyOnRightWall: 0
-  InterdictionLeft: 0
-  InterdictionRight: 0
+  forcedRightMovement: 0
+  forcedLeftMovement: 0
   TimerInterdiction: 0.27
   WalljumpVerticalForceModifier: 1.2
   inCornerBoostState: 0

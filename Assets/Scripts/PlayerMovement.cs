@@ -171,8 +171,18 @@ public class PlayerMovement : MonoBehaviour
         {
             OnDash();
         }
+        if (isDashing)
+        {
+            if(Time.time - timeStartDash >= DashDistance / DashSpeed)
+            {
+                CancelDash();
+            }
+        }
+
         if (pressingDownJump  && !isJumping )// could be onGround and jumping, since the onGround check could be a bit too wide
         {
+
+
 
             if (onGround)
             {
@@ -180,9 +190,8 @@ public class PlayerMovement : MonoBehaviour
                 animator.SetBool("isJumping", isJumping);
                 rb.AddForce(Vector2.up * jumpForce);
                 
-            }        
-            
-            if (!onGround)
+            }
+            else
             {                 
                 if (RecentlyOnleftWall)
                 {
@@ -192,8 +201,6 @@ public class PlayerMovement : MonoBehaviour
                     rb.velocity = new Vector2(rb.velocity.x, 0);
                     rb.AddForce(new Vector2(WallJumpHorizontalForce, jumpForce * WalljumpVerticalForceModifier));
                     isJumping = true;
-                    //StartCoroutine("ColorChangeWallJump");
-
                 }
                 else if (RecentlyOnRightWall)
                 {
@@ -203,7 +210,6 @@ public class PlayerMovement : MonoBehaviour
                     rb.velocity = new Vector2(rb.velocity.x, 0);
                     rb.AddForce(new Vector2(-WallJumpHorizontalForce, jumpForce * WalljumpVerticalForceModifier));
                     isJumping = true;
-                    //StartCoroutine("ColorChangeWallJump");
                 }
                 else if (DoubleJumpAvailable && !onWall && !isDashing)
                 {
@@ -225,6 +231,15 @@ public class PlayerMovement : MonoBehaviour
 
                 }
             }
+
+            if (isJumping)//dans le cas ou on est rentré dans une des boucles du dessus et qu'un jump a effectivement été perform
+            {
+                if (isDashing)
+                {
+                    CancelDash();
+                }
+            }
+
           
         }
 
@@ -285,24 +300,27 @@ public class PlayerMovement : MonoBehaviour
             Debug.LogError("Error");
         }      
     }
-    public IEnumerator DashTimer()
+    
+
+    public void CancelDash()
     {
-        
-        Vector2 preDashVelocity = rb.velocity;
+        isDashing.Assert(true);
+        isDashing = false;
 
-        yield return new WaitForSeconds(DashDistance/DashSpeed);
-
-        if ((rb.velocity.x > 0 && preDashVelocity.x > rb.velocity.x)|| (rb.velocity.x < 0 && preDashVelocity.x < rb.velocity.x))
+        if ((rb.velocity.x > 0 && preDashVelocity.x > rb.velocity.x) || (rb.velocity.x < 0 && preDashVelocity.x < rb.velocity.x))
         {
             rb.velocity = new Vector2(preDashVelocity.x, rb.velocity.y);
         }
 
-        isDashing = false;
+        preDashVelocity = new Vector2(float.NaN, float.NaN);
+        timeStartDash = float.NaN;
+
         if (onGround)
         {
             DashAvailable = true;
         }
     }
+
     // Les deux coroutine suivante nous ont servies pendant les phases de test à bien vérifier l'état du personnage ( quand il est entrain de walljump ou de dash )
     /*public IEnumerator ColorChangeWallJump()
     {
@@ -334,14 +352,20 @@ public class PlayerMovement : MonoBehaviour
         inCornerBoostState = false;
     }
     
+    Vector2 preDashVelocity = new Vector2(float.NaN, float.NaN);
+    float timeStartDash = float.NaN;
     public void OnDash()
     {
+        isDashing = true;
+        preDashVelocity = rb.velocity;
+        timeStartDash = Time.time;
+
         if (isJumping)
         {
             isJumping = false;
         }
         
-        isDashing = true;
+        
         Vector2 DashAngle = Vector2.zero;
         if (pressingRight && !pressingLeft)
         {
@@ -365,14 +389,11 @@ public class PlayerMovement : MonoBehaviour
         }
         
         animator.SetBool("isDashing", isDashing);
-        //StartCoroutine("ColorChangeDash");
-        StartCoroutine(DashTimer());
 
         rb.velocity = new Vector2(DashAngle.x * DashSpeed, DashAngle.y * DashSpeed);
         DashAvailable = false;
 
     }
-    //time 0.25, mult 2
 
     public bool debugActivateCornerBoost;
     public void OnTriggerExit2D(Collider2D other)
