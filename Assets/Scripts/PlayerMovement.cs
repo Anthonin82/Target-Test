@@ -7,8 +7,9 @@ public class PlayerMovement : MonoBehaviour
 {
 
     //TODO :
-    // Wavedash devrait cancel le dash et refresh le cd, pour qu on puisse empecher le saut pendant le dash et que ca soit pas cringe
-    // Appuyer sur jump contre un mur devrait nous dégager
+    // Avoir un movedLeftFirst/movedRightFirst qui dit si on doit move a gauche ou a droite qd on press els deux, ainsi que savoir ou dash
+    //dégager le resetWalld e la coroutine et le mettre dans fixed update avec un check en fonction du temps en rajoutant deux variables de temps
+
 
     public SpriteRenderer PlayerSR;
     public Rigidbody2D rb;
@@ -206,7 +207,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     animator.SetBool("isJumping", true);
                     forcedLeftMovement = true;
-                    StartCoroutine("TimerInterdictionRight");
+                    StartCoroutine(TimerInterdictionRight());
                     rb.velocity = new Vector2(rb.velocity.x, 0);
                     rb.AddForce(new Vector2(-WallJumpHorizontalForce, jumpForce * WalljumpVerticalForceModifier));
                     isJumping = true;
@@ -251,7 +252,8 @@ public class PlayerMovement : MonoBehaviour
 
         SetGravity();
 
-        //ces trois lignes ne doivent être vraies que pour une frame de fixed update max.
+        //ces trois variables ne doivent être vraies que pour une frame de fixed update max. 
+        //si elles deviennent vraies, c'est ici qu'on le reset à false
         pressingDownDash = false;
         pressingDownJump = false;
         releasingJump = false;
