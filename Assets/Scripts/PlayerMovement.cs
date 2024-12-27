@@ -6,7 +6,9 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
-    //TODO : Wavedash devrait cancel le dash et refresh le cd, pour qu on puisse empecher le saut pendant le dash et que ca soit pas cringe
+    //TODO :
+    // Wavedash devrait cancel le dash et refresh le cd, pour qu on puisse empecher le saut pendant le dash et que ca soit pas cringe
+    // Appuyer sur jump contre un mur devrait nous dégager
 
     public SpriteRenderer PlayerSR;
     public Rigidbody2D rb;
@@ -36,7 +38,6 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce = 200f;
     public float WallJumpHorizontalForce = 200f;
     public float TimerJumpApex;
-    public bool Gravityneeded;
     public bool DoubleJumpAvailable;
 
     public Transform leftPlayerSide;
@@ -57,8 +58,8 @@ public class PlayerMovement : MonoBehaviour
 
     public bool RecentlyOnleftWall;
     public bool RecentlyOnRightWall;
-    public bool InterdictionLeft;
-    public bool InterdictionRight;
+    public bool forcedRightMovement;
+    public bool forcedLeftMovement;
     public float TimerInterdiction;
     public float WalljumpVerticalForceModifier;
 
@@ -133,12 +134,12 @@ public class PlayerMovement : MonoBehaviour
 
         float horizontalSpeedGoal;
 
-        if (pressingLeft && !pressingRight && !onLeftWall && !isDashing && !InterdictionLeft)
+        if ((pressingLeft||forcedLeftMovement) && !pressingRight && !onLeftWall && !isDashing && !forcedRightMovement)
         {
             horizontalSpeedGoal = -horizontalSpeed * currentFrameCornerBoostCoeff;
             PlayerSR.flipX = true;
         }
-        else if (pressingRight && !pressingLeft && !onRightWall && !isDashing && !InterdictionRight)
+        else if ((pressingRight||forcedRightMovement) && !pressingLeft && !onRightWall && !isDashing && !forcedLeftMovement)
         {
             horizontalSpeedGoal = horizontalSpeed * currentFrameCornerBoostCoeff;
             PlayerSR.flipX = false;
@@ -172,50 +173,44 @@ public class PlayerMovement : MonoBehaviour
         }
         if (pressingDownJump  && !isJumping )// could be onGround and jumping, since the onGround check could be a bit too wide
         {
+
             if (onGround)
             {
-                StartCoroutine("JumpTimer");
                 isJumping = true;
                 animator.SetBool("isJumping", isJumping);
                 rb.AddForce(Vector2.up * jumpForce);
-                rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
                 
-            }         
+            }        
+            
             if (!onGround)
             {                 
-                if (RecentlyOnleftWall && pressingRight)
+                if (RecentlyOnleftWall)
                 {
                     animator.SetBool("isJumping", true);
-                    InterdictionLeft = true;
-                    StartCoroutine("TimerInterdictionLeft");
-                    rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
+                    forcedRightMovement = true;
+                    StartCoroutine(TimerInterdictionLeft());
                     rb.velocity = new Vector2(rb.velocity.x, 0);
                     rb.AddForce(new Vector2(WallJumpHorizontalForce, jumpForce * WalljumpVerticalForceModifier));
-                    isJumping = false;
-                    GravityReset();
+                    isJumping = true;
                     //StartCoroutine("ColorChangeWallJump");
 
                 }
-                else if (RecentlyOnRightWall && pressingLeft)
+                else if (RecentlyOnRightWall)
                 {
                     animator.SetBool("isJumping", true);
-                    InterdictionRight = true;
+                    forcedLeftMovement = true;
                     StartCoroutine("TimerInterdictionRight");
-                    rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
                     rb.velocity = new Vector2(rb.velocity.x, 0);
                     rb.AddForce(new Vector2(-WallJumpHorizontalForce, jumpForce * WalljumpVerticalForceModifier));
-                    isJumping = false;
-                    GravityReset();
+                    isJumping = true;
                     //StartCoroutine("ColorChangeWallJump");
                 }
                 else if (DoubleJumpAvailable && !onWall && !isDashing)
                 {
                     
-                    StopCoroutine(JumpTimer());
-                    StartCoroutine("JumpTimer");
+                    
                     isJumping = true;
                     animator.SetBool("isJumping", isJumping);
-                    rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
                     if (rb.velocity.y < 0)
                     {
                         rb.velocity = new Vector2(rb.velocity.x, 0);
@@ -237,15 +232,11 @@ public class PlayerMovement : MonoBehaviour
         {
             isJumping = false;
             reachedJumpApexThisFrame = false;
-            rb.gravityScale = defaultGravityScale;
-        }
-        if ( pressingDown && !isJumping && !onGround)
-        {
-            rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
         }
 
+        SetGravity();
 
-        //ces trois lignes ne peuvent être vraies que pour une frame de fixed update max.
+        //ces trois lignes ne doivent être vraies que pour une frame de fixed update max.
         pressingDownDash = false;
         pressingDownJump = false;
         releasingJump = false;
@@ -254,22 +245,33 @@ public class PlayerMovement : MonoBehaviour
 
     }
     
+    public void SetGravity()
+    {
+        if (isJumping)
+        {
+            rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
+        }
+        else if (isDashing)
+        {
+            rb.gravityScale = 0f;
+        }
+        else
+        {
+            rb.gravityScale = defaultGravityScale;
+        }
+    }
 
     public void LandingOnGround()
     {
-        rb.gravityScale = defaultGravityScale;
+        isJumping = false;
         DashAvailable = true;
         DoubleJumpAvailable = true;
     }
-    public IEnumerator JumpTimer()
-    {
-        yield return new WaitForSeconds(TimerJumpApex);
-        Gravityneeded = true; 
-
-    }
-    public IEnumerator ResetOnWall(string ValueParam)
+    
+    public IEnumerator ResetOnWall(string ValueParam) //imprécis btw, en pratique c est random entre deux et trois frames
     {
         yield return new WaitForSeconds (Time.fixedDeltaTime * 3);
+        
         if ( ValueParam == "left")
         {
             RecentlyOnleftWall = false;
@@ -296,8 +298,10 @@ public class PlayerMovement : MonoBehaviour
         }
 
         isDashing = false;
-        rb.gravityScale = defaultGravityScale; 
-
+        if (onGround)
+        {
+            DashAvailable = true;
+        }
     }
     // Les deux coroutine suivante nous ont servies pendant les phases de test à bien vérifier l'état du personnage ( quand il est entrain de walljump ou de dash )
     /*public IEnumerator ColorChangeWallJump()
@@ -312,15 +316,15 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         PlayerSR.color = Color.white;
     }*/
-    public IEnumerator TimerInterdictionLeft()
+    public IEnumerator TimerInterdictionLeft() //wait for seconds super cringe
     {
         yield return new WaitForSeconds(TimerInterdiction);
-        InterdictionLeft = false;
+        forcedRightMovement = false;
     }
     public IEnumerator TimerInterdictionRight()
     {
         yield return new WaitForSeconds(TimerInterdiction);
-        InterdictionRight = false;
+        forcedLeftMovement = false;
     }
     public IEnumerator CornerBoostReset()
     {
@@ -329,33 +333,15 @@ public class PlayerMovement : MonoBehaviour
         PlayerSR.color = Color.white;
         inCornerBoostState = false;
     }
-    public void GravityReset()
-    {        
-        if (isJumping && rb.velocity.y <= 0)
-        { 
-            rb.gravityScale= JumpingGravityCoefficient * defaultGravityScale;            
-        }
-        /*else if ( !isJumping && !isDashing)
-        {
-            rb.gravityScale = defaultGravityScale;
-        }*/
-
-
-        if (!isDashing && isJumping )
-        {
-            rb.gravityScale = JumpingGravityCoefficient * defaultGravityScale;
-        }
-        if (!isDashing && isJumping) 
-        {
-            rb.gravityScale = defaultGravityScale;
-        }
-        
-    }
+    
     public void OnDash()
     {
+        if (isJumping)
+        {
+            isJumping = false;
+        }
         
         isDashing = true;
-        rb.gravityScale = 0;
         Vector2 DashAngle = Vector2.zero;
         if (pressingRight && !pressingLeft)
         {
