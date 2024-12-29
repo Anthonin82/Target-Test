@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
+using static HoritzontalDirection;
+
+public enum HoritzontalDirection { Left, Right };
 
 public class PlayerMovement : MonoBehaviour
 {
 
     //TODO :
-    // Avoir un movedLeftFirst/movedRightFirst qui dit si on doit move a gauche ou a droite qd on press els deux, ainsi que savoir ou dash
     //dégager le resetWalld e la coroutine et le mettre dans fixed update avec un check en fonction du temps en rajoutant deux variables de temps
 
 
     public SpriteRenderer PlayerSR;
-    public Rigidbody2D rb;
+    public Rigidbody2D rb; 
     public float horizontalSpeed;
     public float maxHorizontalSpeed;
     public float horizontalAccel;
@@ -47,6 +49,8 @@ public class PlayerMovement : MonoBehaviour
 
     public bool pressingLeft;
     public bool pressingRight;
+    public HoritzontalDirection lastHorizontalDirectionPressed;
+
     public bool pressingUp;
     public bool pressingDown;
 
@@ -135,12 +139,12 @@ public class PlayerMovement : MonoBehaviour
 
         float horizontalSpeedGoal;
 
-        if ((pressingLeft||forcedLeftMovement) && !pressingRight && !onLeftWall && !isDashing && !forcedRightMovement)
+        if (((pressingLeft && lastHorizontalDirectionPressed == Left)||forcedLeftMovement) && !onLeftWall && !isDashing && !forcedRightMovement)
         {
             horizontalSpeedGoal = -horizontalSpeed * currentFrameCornerBoostCoeff;
             PlayerSR.flipX = true;
         }
-        else if ((pressingRight||forcedRightMovement) && !pressingLeft && !onRightWall && !isDashing && !forcedLeftMovement)
+        else if (((pressingRight && lastHorizontalDirectionPressed == Right)||forcedRightMovement) && !onRightWall && !isDashing && !forcedLeftMovement)
         {
             horizontalSpeedGoal = horizontalSpeed * currentFrameCornerBoostCoeff;
             PlayerSR.flipX = false;
@@ -369,11 +373,11 @@ public class PlayerMovement : MonoBehaviour
         
         
         Vector2 DashAngle = Vector2.zero;
-        if (pressingRight && !pressingLeft)
+        if (pressingRight && lastHorizontalDirectionPressed == Right)
         {
             DashAngle.x = 1;
         }
-        else if (pressingLeft && !pressingRight)
+        else if (pressingLeft && lastHorizontalDirectionPressed == Left)
         {
             DashAngle.x = -1;
         }
@@ -387,7 +391,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (DashAngle.y == -1 && DashAngle.x != 0 && !onGround)
         {
-            DashAngle = DashAngle * CoefSpeedDashDown;
+            DashAngle *= CoefSpeedDashDown;
         }
         
         animator.SetBool("isDashing", isDashing);

@@ -35,6 +35,7 @@ public class InputManager : MonoBehaviour
         if (context.started)
         {
             movement.pressingLeft = true;
+            movement.lastHorizontalDirectionPressed = HoritzontalDirection.Left;
             Manager.managerInstance.OnKeyPressed();
         }
         if (context.canceled)
@@ -47,6 +48,7 @@ public class InputManager : MonoBehaviour
         if (context.started)
         {
             movement.pressingRight = true;
+            movement.lastHorizontalDirectionPressed = HoritzontalDirection.Right;
             Manager.managerInstance.OnKeyPressed();
         }
         if (context.canceled)
