@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
-public class Manager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     public float ValeurTimer = 0f;
     public int lvlID;
@@ -17,14 +17,14 @@ public class Manager : MonoBehaviour
     public Scene loadedScene;
     public PauseMenu pauseMenu;
 
-    public static Manager managerInstance;
+    public static GameManager inst;
     public void Awake()
     {
-       if (managerInstance != null)
+        if (inst != null)
         {
             Debug.LogError("Alerte");
         }
-        managerInstance = this;
+        inst = this;
     }
     private void Start()
     {
@@ -41,11 +41,10 @@ public class Manager : MonoBehaviour
         if (Jeufini)
         {
             
-             if (ValeurTimer <= PlayerPrefs.GetFloat("HighScore" + lvlID, 99999))
-             {
+            if (ValeurTimer <= PlayerPrefs.GetFloat("HighScore" + lvlID, 99999))
+            {
                 PlayerPrefs.SetFloat("HighScore"+lvlID, ValeurTimer);
                 SceneManager.LoadScene(1);
-
             }
             else
             {
@@ -57,13 +56,17 @@ public class Manager : MonoBehaviour
     }
     public float timeBeginPlay = float.NaN;
     bool timerStarted = false;
+
+    /// <summary>
+    /// a rename et a changer un de ces 4
+    /// entre autres choses, le temps de départ n'est pas consistant suivant la frame, ca devrati commencer a fixed update
+    /// </summary>
     public void Timer()
     {
         if (PlayerMovement.instance.GetComponent<CompteurTarget>().NBTargetRestant != 0)
         {
             ValeurTimer = Time.time - timeBeginPlay;
             affichageTimer.text = ValeurTimer.ToString("F2");
-
         }
         else if (!Jeufini)
         {

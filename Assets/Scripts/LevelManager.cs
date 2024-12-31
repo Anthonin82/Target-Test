@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    public static LevelManager Instance;
+    public static LevelManager inst;
     public float[] meilleursScores;
     public TextMeshProUGUI[] scoresText;
     
@@ -14,11 +14,11 @@ public class LevelManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
+        if (inst != null)
         {
             Debug.LogError("2levelmanager");
         }
-        Instance = this;
+        inst = this;
         for (int i = 0; i < meilleursScores.Length; i++)
         {
             meilleursScores[i] = PlayerPrefs.GetFloat("HighScore"+i, 99999);
@@ -44,9 +44,12 @@ public class LevelManager : MonoBehaviour
     }
 
 
-    public void LevelSelection(int level)
+    public void LevelSelection(int levelIndex)
     {
-        SceneManager.LoadScene(level);
-    }   
+        SceneManager.LoadScene(registeredLevelNames[levelIndex]);
+    }
+
+    public string[] registeredLevelNames;
+
 
 }

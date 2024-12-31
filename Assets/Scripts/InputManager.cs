@@ -26,7 +26,7 @@ public class InputManager : MonoBehaviour
         }
         if (context.started)
         {
-            Manager.managerInstance.OnKeyPressed();
+            GameManager.inst.OnKeyPressed();
         }
     }
     public void OnLeftButton(InputAction.CallbackContext context)
@@ -36,7 +36,7 @@ public class InputManager : MonoBehaviour
         {
             movement.pressingLeft = true;
             movement.lastHorizontalDirectionPressed = HoritzontalDirection.Left;
-            Manager.managerInstance.OnKeyPressed();
+            GameManager.inst.OnKeyPressed();
         }
         if (context.canceled)
         {
@@ -49,7 +49,7 @@ public class InputManager : MonoBehaviour
         {
             movement.pressingRight = true;
             movement.lastHorizontalDirectionPressed = HoritzontalDirection.Right;
-            Manager.managerInstance.OnKeyPressed();
+            GameManager.inst.OnKeyPressed();
         }
         if (context.canceled)
         {
@@ -61,7 +61,7 @@ public class InputManager : MonoBehaviour
         if (context.started)
         {
             movement.pressingUp = true;
-            Manager.managerInstance.OnKeyPressed();
+            GameManager.inst.OnKeyPressed();
         }
         if (context.canceled)
         {
@@ -73,7 +73,7 @@ public class InputManager : MonoBehaviour
         if (context.started)
         {
             movement.pressingDown = true;
-            Manager.managerInstance.OnKeyPressed();
+            GameManager.inst.OnKeyPressed();
         }
         if (context.canceled)
         {
@@ -85,7 +85,7 @@ public class InputManager : MonoBehaviour
     {
         if (context.started)
         {
-            Manager.managerInstance.pauseMenu.Retry();
+            GameManager.inst.pauseMenu.Retry();
         }
     }
 
