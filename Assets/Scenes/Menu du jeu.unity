@@ -2329,6 +2329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7859fffe00cfcd848857abea00d6a363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  localSaveManager: {fileID: 1987940892}
 --- !u!1 &1444516873
 GameObject:
   m_ObjectHideFlags: 0
@@ -3009,7 +3010,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1987940892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3022,6 +3023,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbd1371245e15b04286361f581f41ee9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LevelsDatabase: {fileID: 11400000, guid: bd18f4ef7c2fadf41b7f1b4e9b26d4bf, type: 2}
 --- !u!4 &1987940893
 Transform:
   m_ObjectHideFlags: 0
@@ -3173,6 +3175,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2029666874}
   m_CullTransparentMesh: 1
+--- !u!1 &2051698436
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2051698437}
+  m_Layer: 0
+  m_Name: JsonTesting
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2051698437
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2051698436}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 169.96873, y: 356.74817, z: -1.3212713}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2052298780
 GameObject:
   m_ObjectHideFlags: 0
@@ -3378,3 +3411,4 @@ SceneRoots:
   - {fileID: 1180322271}
   - {fileID: 1393584752}
   - {fileID: 1987940893}
+  - {fileID: 2051698437}

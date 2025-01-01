@@ -9,9 +9,13 @@ using UnityEditor;
 using UnityEngine;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using System.Text;
+using Newtonsoft.Json;
+using System.IO;
 
 public class LoginManager : MonoBehaviour
 {
+    public LocalSaveManager localSaveManager;
     async void Awake()
     {
         try
@@ -22,56 +26,16 @@ public class LoginManager : MonoBehaviour
         {
             Debug.LogException(e);
         }
-
-
-
         SetupEvents();
         //await SignUpWithUsernamePasswordAsync("username1", "@Password1");
         await SignInWithUsernamePasswordAsync("username1", "@Password1");
-        SaveData();
-        CallMethod();
-
-
-    }
-
-    private class ResultType
-    {
-        public int Roll;
-        public int Sides;
-    }
-
-    // Call this method to roll the dice (use a button)
-    public async void CallMethod()
-    {
-        await UnityServices.InitializeAsync();
-        // Sign in anonymously into the Authentication service
-        if (!AuthenticationService.Instance.IsSignedIn) await AuthenticationService.Instance.SignInAnonymouslyAsync();
-
-        // Call out to the Roll Dice script in Cloud Code
-        var response = await CloudCodeService.Instance.CallEndpointAsync<ResultType>("JavaAled", new Dictionary<string, object>() { { "diceSides", 6 } });
-
-        // Log the response of the script in console
-        Debug.Log($"You rolled {response.Roll} / {response.Sides}");
+        await localSaveManager.LoadSaveFileFromCloud();
     }
 
 
-    /// <summary>
-    /// a user is defined by their player id.
-    /// foreach level :
-    /// the number of times registered (max 10)
-    /// the top 10 times.
-    /// </summary>
-    public async void SaveData()
-    {
+    
 
 
-        var playerData = new Dictionary<string, object>{
-          {"firstKeyName", "a text value"},
-          {"secondKeyName", 124}
-        };
-        var result = await CloudSaveService.Instance.Data.Player.SaveAsync(playerData);
-        Debug.Log($"Saved data {string.Join(',', playerData)}");
-    }
 
     async Task SignUpWithUsernamePasswordAsync(string username, string password)
     {

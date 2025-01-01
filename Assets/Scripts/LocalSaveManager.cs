@@ -1,5 +1,7 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using Unity.Services.CloudSave;
 using Unity.VisualScripting;
@@ -7,39 +9,72 @@ using UnityEngine;
 
 public class LocalSaveManager : MonoBehaviour
 {
-    //a user is defined by their player id.
-    //pseudo
-    //foreach level :
-    //  the number of times registered (max 10)
-    //  the top 10 times.
+    //load save logic :
+    //game will always close well because fuck off
 
-    object test = 3;
-    object tzest = "a";
+    //load le file at launch
+    //save when quit
 
 
 
+    public LevelsDatabase LevelsDatabase;
+
+    
     public static Dictionary<string, object> localSaveData = new();
+    static List<string> dataKeys = new() { "username" };
 
-    private async void Start()
+    private void Awake()
     {
-        Debug.Log(3 + test.ConvertTo<int>());
-        Debug.Log(3 + tzest.ConvertTo<string>());
-        //await InitializeLocalSaveFromDatabase();
+        for(int lvlIndex = 0; lvlIndex < LevelsDatabase.levelsCount; lvlIndex++)
+        {
+            dataKeys.Add("level" + lvlIndex + "_timesCount");
+        }
     }
 
-    [ContextMenu("initi")]
-    public async Task InitializeLocalSaveFromDatabase()
+    
+
+    public void ExtractDataFromSaveFile(string saveJsonString)
     {
+        Dictionary<string, object> deserializedData = JsonConvert.DeserializeObject<Dictionary<string, object>>(saveJsonString);
+        GUIUtility.systemCopyBuffer = saveJsonString;
+
         
-        var playerData = await CloudSaveService.Instance.Data.Player.LoadAsync(new HashSet<string> { "firstKeyName", "secondKeyName" });
-        if (playerData.TryGetValue("firstKeyName", out var keyName))
+
+        localSaveData = deserializedData;
+
+
+    }
+
+    [ContextMenu("read data")]
+    public async Task LoadSaveFileFromCloud()
+    {
+        byte[] save = await CloudSaveService.Instance.Files.Player.LoadBytesAsync("save");
+        string saveJsonString = Encoding.UTF8.GetString(save);
+        ExtractDataFromSaveFile(saveJsonString);
+
+        Debug.Log("read save from cloud");
+
+
+
+    }
+
+    [ContextMenu("save data")]
+    public async Task WriteSaveDataOnCloud()
+    {
+
+        Dictionary<string, object> data = new Dictionary<string, object>
         {
-            Debug.Log($"keyName: {keyName.Value.GetAs<string>()}");
-        }
-        if (playerData.TryGetValue("secondKeyName", out var keyName2))
-        {
-            Debug.Log($"keyName2: {keyName2.Value.GetAs<string>()}");
-        }
+            { "Name", "Player1" },
+            { "Health", 100 },
+            { "IsAlive", true },
+            { "IsDead", 1.337f },
+            { "Position", "hell was made for people like you" }
+        };
+
+        string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+        byte[] file = Encoding.UTF8.GetBytes(json);
+        await CloudSaveService.Instance.Files.Player.SaveAsync("save", file);
+        Debug.Log("data written");
 
     }
 

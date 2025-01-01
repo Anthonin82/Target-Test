@@ -6,10 +6,7 @@ public class CompteurTarget : MonoBehaviour
 {
     public int NBTargetRestant = 3;
 
-    public void Awake()
-    {
-        
-    }
+    
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Target"))
@@ -18,6 +15,12 @@ public class CompteurTarget : MonoBehaviour
             NBTargetRestant -= 1;
             Destroy(other.gameObject);
             UIImageManager.Instance.UIUpdater();
+
+            if(NBTargetRestant == 0)
+            {
+                GameManager.inst.OnLevelWin();
+            }
+
         }
     }
 
