@@ -1,8 +1,11 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.Services.CloudCode;
 using Unity.Services.CloudSave;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -19,17 +22,12 @@ public class LocalSaveManager : MonoBehaviour
 
     public LevelsDatabase LevelsDatabase;
 
-    
+    /// <summary>
+    /// local Save : 
+    /// </summary>
     public static Dictionary<string, object> localSaveData = new();
-    static List<string> dataKeys = new() { "username" };
-
-    private void Awake()
-    {
-        for(int lvlIndex = 0; lvlIndex < LevelsDatabase.levelsCount; lvlIndex++)
-        {
-            dataKeys.Add("level" + lvlIndex + "_timesCount");
-        }
-    }
+    public static Dictionary<string, object> leaderboardData = new();
+    
 
     
 
@@ -53,10 +51,29 @@ public class LocalSaveManager : MonoBehaviour
         ExtractDataFromSaveFile(saveJsonString);
 
         Debug.Log("read save from cloud");
-
-
-
     }
+
+
+    [ContextMenu("load leaderboard")]
+
+    public async Task LoadLeaderboardsDataFromCloud()
+    {
+        var customItemId = "leaderboardsData";
+        var customItemData = await CloudSaveService.Instance.Data.Custom.LoadAllAsync(customItemId);
+
+        string leaderboardJsonString = customItemData["leaderboardsDataKey"].Value.GetAs<string>();
+        leaderboardData = JsonConvert.DeserializeObject<Dictionary<string, object>>(leaderboardJsonString);
+        Debug.Log("leaderboard loaded");
+    }
+
+
+    [ContextMenu("save leaderboard")]
+    public async Task SaveLeaderboardsDataOnCloud()
+    {
+        int useless = await CloudCodeService.Instance.CallEndpointAsync<int>("SetLeaderboardData", new Dictionary<string, object>() { { "jsonValue", "jsonSTring" } });
+        Debug.Log("leaderboard saved");
+    }
+
 
     [ContextMenu("save data")]
     public async Task WriteSaveDataOnCloud()
@@ -77,6 +94,17 @@ public class LocalSaveManager : MonoBehaviour
         Debug.Log("data written");
 
     }
+
+    public void InitializeLocalDataOnSignUp()
+    {
+        for(int lvlIndex = 0; lvlIndex < LevelsDatabase.levelsCount; lvlIndex++)
+        {
+            localSaveData["level" + lvlIndex + "_timesCount"] = 0;
+        }
+        localSaveData["pseudo"] = "Antho";
+    }
+
+
 
 
 }

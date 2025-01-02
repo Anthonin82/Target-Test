@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public int lvlID;
     public bool Jeufini;
     public TextMeshProUGUI affichageTimer;
-    public UIImageManager ImageManager;
+    public UIManager ImageManager;
     public Scene loadedScene;
     public PauseMenu pauseMenu;
 

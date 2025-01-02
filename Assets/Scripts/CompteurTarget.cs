@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CompteurTarget : MonoBehaviour
 {
-    public int NBTargetRestant = 3;
+    public static int NBTargetRestant = 3;
 
     
     private void OnTriggerEnter2D(Collider2D other)
@@ -14,7 +14,7 @@ public class CompteurTarget : MonoBehaviour
             
             NBTargetRestant -= 1;
             Destroy(other.gameObject);
-            UIImageManager.Instance.UIUpdater();
+            UIManager.Instance.UpdateTargetsUI();
 
             if(NBTargetRestant == 0)
             {
