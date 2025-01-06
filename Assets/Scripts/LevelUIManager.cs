@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+public enum LeaderboardType { Local, Global}
 
-public class UIManager : MonoBehaviour
+public class LevelUIManager : MonoBehaviour
 {
     public Image[] UIimages;    
-    public static UIManager Instance;
+    public static LevelUIManager Instance;
 
     public void Awake()
     {
@@ -23,12 +24,9 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void UpdateTargetsUI()
     {
-        UIimages[CompteurTarget.NBTargetRestant].enabled = false;
+        UIimages[PlayerCompteurTarget.inst.NBTargetRestant].enabled = false;
     }
 
-    public void UpdateLeaderboardUI()
-    {
-
-    }
+    
 
 }

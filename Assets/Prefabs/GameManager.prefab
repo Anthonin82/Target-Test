@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1002526384238193863}
   - component: {fileID: 2495493003342739012}
-  - component: {fileID: 5034479378614579170}
   - component: {fileID: 284518081256430045}
+  - component: {fileID: 1900335677780223160}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -50,28 +50,12 @@ MonoBehaviour:
   lvlID: 0
   Jeufini: 0
   affichageTimer: {fileID: 0}
-  ImageManager: {fileID: 5034479378614579170}
+  ImageManager: {fileID: 0}
   loadedScene:
     m_Handle: 0
   pauseMenu: {fileID: 284518081256430045}
+  levelsDatabase: {fileID: 11400000, guid: bd18f4ef7c2fadf41b7f1b4e9b26d4bf, type: 2}
   timeBeginPlay: NaN
---- !u!114 &5034479378614579170
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6788547146330402970}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cc051925bc3878439e3967a8580ef47, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UIimages:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  TargetRestanteIndex: 3
 --- !u!114 &284518081256430045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,3 +69,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pausePanel: {fileID: 0}
+--- !u!114 &1900335677780223160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6788547146330402970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b667a0146b067054b9dd7663644471c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UIimages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

@@ -27,9 +27,7 @@ public class LoginManager : MonoBehaviour
             Debug.LogException(e);
         }
         SetupEvents();
-        //await SignUpWithUsernamePasswordAsync("username1", "@Password1");
-        await SignInWithUsernamePasswordAsync("username1", "@Password1");
-        await localSaveManager.LoadSaveFileFromCloud();
+        
     }
 
 
@@ -37,12 +35,14 @@ public class LoginManager : MonoBehaviour
 
 
 
-    async Task SignUpWithUsernamePasswordAsync(string username, string password)
+    public async Task SignUpWithUsernamePasswordAsync(string username, string password)
     {
         try
         {
             await AuthenticationService.Instance.SignUpWithUsernamePasswordAsync(username, password);
             Debug.Log("SignUp is successful.");
+            localSaveManager.InitializeLocalDataOnSignUp(username);//instead of loading data from cloud
+            await localSaveManager.WriteSaveDataOnCloud();
         }
         catch (AuthenticationException ex)
         {
@@ -58,12 +58,13 @@ public class LoginManager : MonoBehaviour
         }
     }
 
-    async Task SignInWithUsernamePasswordAsync(string username, string password)
+    public async Task SignInWithUsernamePasswordAsync(string username, string password)
     {
         try
         {
             await AuthenticationService.Instance.SignInWithUsernamePasswordAsync(username, password);
             Debug.Log("SignIn is successful.");
+            await localSaveManager.LoadSaveFileFromCloud();
         }
         catch (AuthenticationException ex)
         {
@@ -104,5 +105,7 @@ public class LoginManager : MonoBehaviour
             Debug.Log("Player session could not be refreshed and expired.");
         };
     }
+
+    
 
 }

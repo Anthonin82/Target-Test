@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -10,12 +12,13 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public float levelTimer = 0f;
-    public int lvlID;
+    [HideInInspector] public int lvlID;
     public bool Jeufini;
     public TextMeshProUGUI affichageTimer;
-    public UIManager ImageManager;
+    public LevelUIManager ImageManager;
     public Scene loadedScene;
     public PauseMenu pauseMenu;
+    public LevelsDatabase levelsDatabase;
 
     public static GameManager inst;
     public void Awake()
@@ -25,6 +28,10 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Alerte");
         }
         inst = this;
+
+        lvlID = Array.IndexOf(levelsDatabase.registeredLevelNames, SceneManager.GetActiveScene().name);
+        (lvlID == -1).Assert(false);
+
     }
     private void Start()
     {
@@ -47,10 +54,13 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0f;
 
-        if (levelTimer <= PlayerPrefs.GetFloat("HighScore" + lvlID, 99999))
-        {
-            PlayerPrefs.SetFloat("HighScore" + lvlID, levelTimer);
-        }
+        //if (levelTimer <= PlayerPrefs.GetFloat("HighScore" + lvlID, 99999))
+        //{
+        //    PlayerPrefs.SetFloat("HighScore" + lvlID, levelTimer);
+        //}
+
+        LocalSaveManager.inst.UpdateLocalSaveData(lvlID, levelTimer);
+        LocalSaveManager.inst.WriteSaveDataOnCloudParallelExec();
 
         Time.timeScale = 1f;
         SceneManager.LoadScene(1);
