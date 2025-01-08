@@ -50,11 +50,12 @@ MonoBehaviour:
   lvlID: 0
   Jeufini: 0
   affichageTimer: {fileID: 0}
-  ImageManager: {fileID: 0}
   loadedScene:
     m_Handle: 0
   pauseMenu: {fileID: 284518081256430045}
   levelsDatabase: {fileID: 11400000, guid: bd18f4ef7c2fadf41b7f1b4e9b26d4bf, type: 2}
+  NBTargetMax: 3
+  NBTargetRestante: 0
   timeBeginPlay: NaN
 --- !u!114 &284518081256430045
 MonoBehaviour:
@@ -82,6 +83,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIimages:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 5999844501159992611, guid: 789f055e84e6f23479b345d4b97bad18, type: 3}
+  - {fileID: 5999844501159992611, guid: 789f055e84e6f23479b345d4b97bad18, type: 3}
+  - {fileID: 5999844501159992611, guid: 789f055e84e6f23479b345d4b97bad18, type: 3}
