@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
 {
 
     //TODO :
-    //dégager le resetWalld e la coroutine et le mettre dans fixed update avec un check en fonction du temps en rajoutant deux variables de temps
+    //dï¿½gager le resetWalld e la coroutine et le mettre dans fixed update avec un check en fonction du temps en rajoutant deux variables de temps
 
 
     public SpriteRenderer PlayerSR;
@@ -94,7 +94,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         animator.SetBool("isDashing", isDashing);
-        animator.SetFloat("VerticalVelocity",rb.velocity.y);
+        animator.SetFloat("VerticalVelocity",rb.linearVelocity.y);
         animator.SetBool("isJumping", isJumping);
 
         if (releasingJump && isJumping)
@@ -155,22 +155,22 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            horizontalSpeedGoal = rb.velocity.x;
+            horizontalSpeedGoal = rb.linearVelocity.x;
         }
 
-        if(!isDashing && Mathf.Abs(rb.velocity.x) > maxHorizontalSpeed) //on cap la vitesse a la vitesse max autorisée
+        if(!isDashing && Mathf.Abs(rb.linearVelocity.x) > maxHorizontalSpeed) //on cap la vitesse a la vitesse max autorisï¿½e
         {
-            rb.velocity = new Vector2(maxHorizontalSpeed * Mathf.Sign(rb.velocity.x), rb.velocity.y);
+            rb.linearVelocity = new Vector2(maxHorizontalSpeed * Mathf.Sign(rb.linearVelocity.x), rb.linearVelocity.y);
         }
         
         
-        if((horizontalSpeedGoal > 0 && rb.velocity.x > horizontalSpeed) || (horizontalSpeedGoal < 0 && rb.velocity.x < -horizontalSpeed))
+        if((horizontalSpeedGoal > 0 && rb.linearVelocity.x > horizontalSpeed) || (horizontalSpeedGoal < 0 && rb.linearVelocity.x < -horizontalSpeed))
         {
-            rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, horizontalSpeedGoal, horizontalDecel * Time.fixedDeltaTime), rb.velocity.y);
+            rb.linearVelocity = new Vector2(Mathf.MoveTowards(rb.linearVelocity.x, horizontalSpeedGoal, horizontalDecel * Time.fixedDeltaTime), rb.linearVelocity.y);
         }
         else
         {
-            rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, horizontalSpeedGoal, horizontalAccel * Time.fixedDeltaTime), rb.velocity.y);
+            rb.linearVelocity = new Vector2(Mathf.MoveTowards(rb.linearVelocity.x, horizontalSpeedGoal, horizontalAccel * Time.fixedDeltaTime), rb.linearVelocity.y);
         }
         if (pressingDownDash && DashAvailable && !isDashing)
         {
@@ -203,7 +203,7 @@ public class PlayerMovement : MonoBehaviour
                     animator.SetBool("isJumping", true);
                     forcedRightMovement = true;
                     StartCoroutine(TimerInterdictionLeft());
-                    rb.velocity = new Vector2(rb.velocity.x, 0);
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
                     rb.AddForce(new Vector2(WallJumpHorizontalForce, jumpForce * WalljumpVerticalForceModifier));
                     isJumping = true;
                 }
@@ -212,7 +212,7 @@ public class PlayerMovement : MonoBehaviour
                     animator.SetBool("isJumping", true);
                     forcedLeftMovement = true;
                     StartCoroutine(TimerInterdictionRight());
-                    rb.velocity = new Vector2(rb.velocity.x, 0);
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
                     rb.AddForce(new Vector2(-WallJumpHorizontalForce, jumpForce * WalljumpVerticalForceModifier));
                     isJumping = true;
                 }
@@ -222,22 +222,22 @@ public class PlayerMovement : MonoBehaviour
                     
                     isJumping = true;
                     animator.SetBool("isJumping", isJumping);
-                    if (rb.velocity.y < 0)
+                    if (rb.linearVelocity.y < 0)
                     {
-                        rb.velocity = new Vector2(rb.velocity.x, 0);
+                        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
                     }
                     rb.AddForce(Vector2.up * jumpForce);
                     DoubleJumpAvailable = false;
 
-                    if((pressingRight && rb.velocity.x < 0) || (pressingLeft && rb.velocity.x > 0))
+                    if((pressingRight && rb.linearVelocity.x < 0) || (pressingLeft && rb.linearVelocity.x > 0))
                     {
-                        rb.velocity = new Vector2(-rb.velocity.x, rb.velocity.y);
+                        rb.linearVelocity = new Vector2(-rb.linearVelocity.x, rb.linearVelocity.y);
                     }
 
                 }
             }
 
-            if (isJumping)//dans le cas ou on est rentré dans une des boucles du dessus et qu'un jump a effectivement été perform
+            if (isJumping)//dans le cas ou on est rentrï¿½ dans une des boucles du dessus et qu'un jump a effectivement ï¿½tï¿½ perform
             {
                 if (isDashing)
                 {
@@ -256,8 +256,8 @@ public class PlayerMovement : MonoBehaviour
 
         SetGravity();
 
-        //ces trois variables ne doivent être vraies que pour une frame de fixed update max. 
-        //si elles deviennent vraies, c'est ici qu'on le reset à false
+        //ces trois variables ne doivent ï¿½tre vraies que pour une frame de fixed update max. 
+        //si elles deviennent vraies, c'est ici qu'on le reset ï¿½ false
         pressingDownDash = false;
         pressingDownJump = false;
         releasingJump = false;
@@ -289,7 +289,7 @@ public class PlayerMovement : MonoBehaviour
         DoubleJumpAvailable = true;
     }
     
-    public IEnumerator ResetOnWall(string ValueParam) //imprécis btw, en pratique c est random entre deux et trois frames
+    public IEnumerator ResetOnWall(string ValueParam) //imprï¿½cis btw, en pratique c est random entre deux et trois frames
     {
         yield return new WaitForSeconds (Time.fixedDeltaTime * 3);
         
@@ -313,9 +313,9 @@ public class PlayerMovement : MonoBehaviour
         isDashing.Assert(true);
         isDashing = false;
 
-        if ((rb.velocity.x > 0 && preDashVelocity.x > rb.velocity.x) || (rb.velocity.x < 0 && preDashVelocity.x < rb.velocity.x))
+        if ((rb.linearVelocity.x > 0 && preDashVelocity.x > rb.linearVelocity.x) || (rb.linearVelocity.x < 0 && preDashVelocity.x < rb.linearVelocity.x))
         {
-            rb.velocity = new Vector2(preDashVelocity.x, rb.velocity.y);
+            rb.linearVelocity = new Vector2(preDashVelocity.x, rb.linearVelocity.y);
         }
 
         preDashVelocity = new Vector2(float.NaN, float.NaN);
@@ -327,7 +327,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // Les deux coroutine suivante nous ont servies pendant les phases de test à bien vérifier l'état du personnage ( quand il est entrain de walljump ou de dash )
+    // Les deux coroutine suivante nous ont servies pendant les phases de test ï¿½ bien vï¿½rifier l'ï¿½tat du personnage ( quand il est entrain de walljump ou de dash )
     /*public IEnumerator ColorChangeWallJump()
     {
         PlayerSR.color = Color.black;
@@ -363,7 +363,7 @@ public class PlayerMovement : MonoBehaviour
     public void OnDash()
     {
         isDashing = true;
-        preDashVelocity = rb.velocity;
+        preDashVelocity = rb.linearVelocity;
         timeStartDash = Time.time;
 
         if (isJumping)
@@ -396,7 +396,7 @@ public class PlayerMovement : MonoBehaviour
         
         animator.SetBool("isDashing", isDashing);
 
-        rb.velocity = new Vector2(DashAngle.x * DashSpeed, DashAngle.y * DashSpeed);
+        rb.linearVelocity = new Vector2(DashAngle.x * DashSpeed, DashAngle.y * DashSpeed);
         DashAvailable = false;
 
     }

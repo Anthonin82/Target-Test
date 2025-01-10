@@ -27,6 +27,7 @@ public class LoginManager : MonoBehaviour
             Debug.LogException(e);
         }
         SetupEvents();
+
         
     }
 
@@ -41,8 +42,9 @@ public class LoginManager : MonoBehaviour
         {
             await AuthenticationService.Instance.SignUpWithUsernamePasswordAsync(username, password);
             Debug.Log("SignUp is successful.");
-            localSaveManager.InitializeLocalDataOnSignUp(username);//instead of loading data from cloud
+            localSaveManager.InitializeBlankLocalData(username);//instead of loading data from cloud
             await localSaveManager.WriteSaveDataOnCloud();
+            LocalSaveManager.inst.saveMode = SaveMode.Online;
         }
         catch (AuthenticationException ex)
         {
@@ -65,6 +67,7 @@ public class LoginManager : MonoBehaviour
             await AuthenticationService.Instance.SignInWithUsernamePasswordAsync(username, password);
             Debug.Log("SignIn is successful.");
             await localSaveManager.LoadSaveFileFromCloud();
+            LocalSaveManager.inst.saveMode = SaveMode.Online;
         }
         catch (AuthenticationException ex)
         {

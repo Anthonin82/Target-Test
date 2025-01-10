@@ -6679,6 +6679,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LevelsDatabase: {fileID: 11400000, guid: bd18f4ef7c2fadf41b7f1b4e9b26d4bf, type: 2}
+  saveMode: 0
   debugPseudo: debugHelp
 --- !u!4 &1987940893
 Transform:

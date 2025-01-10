@@ -11,6 +11,8 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
+public enum SaveMode { Offline, Online}
+
 public class LocalSaveManager : MonoBehaviour
 {
     //load save logic :
@@ -28,9 +30,32 @@ public class LocalSaveManager : MonoBehaviour
     /// <para>key ("level" + lvlIndex + "_timesCount") to get the number of times saved</para>
     /// <para>key ("level" + lvlIndex + "_time" + timeIndex) to get the value of a time whose idnex is between 1 and timesCount, saved to F2 format</para>
     /// </summary>
-    public Dictionary<string, string> localSaveData = new();
+    /// 
+    public static Dictionary<string, string> LocalSaveData
+    {
+        get
+        {
+
+            
+
+            return _localSaveData;
+
+        }
+        set
+        {
+
+            _localSaveData = value;
+       
+
+        }
+    }
+
+    
+
+    private static Dictionary<string, string> _localSaveData = new();
     public Dictionary<string, string> leaderboardData = new();
     public static LocalSaveManager inst;
+    public SaveMode saveMode;
 
     private void Awake()
     {
@@ -45,27 +70,62 @@ public class LocalSaveManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        saveMode = SaveMode.Offline;
+        LoadSaveFileFromLocal();
+    }
 
     public void ExtractDataFromSaveFile(string saveJsonString)
     {
+        Debug.Log(saveJsonString);
         Dictionary<string, string> deserializedData = JsonConvert.DeserializeObject<Dictionary<string, string>>(saveJsonString);
+        Debug.Log(deserializedData["level" + 0 + "_timesCount"]);
         GUIUtility.systemCopyBuffer = saveJsonString;
 
         
 
-        localSaveData = deserializedData;
+        LocalSaveData = new(deserializedData);
 
 
     }
 
-    [ContextMenu("read data")]
+    [ContextMenu("read cloud data")]
     public async Task LoadSaveFileFromCloud()
     {
         byte[] save = await CloudSaveService.Instance.Files.Player.LoadBytesAsync("save");
         string saveJsonString = Encoding.UTF8.GetString(save);
         ExtractDataFromSaveFile(saveJsonString);
+        Debug.Log(LocalSaveData["level" + 0 + "_timesCount"]);
+
 
         Debug.Log("read save from cloud");
+    }
+
+    [ContextMenu("read local data")]
+    public void LoadSaveFileFromLocal()
+    {
+        string saveJsonFile = PlayerPrefs.GetString("save", "null");
+        if(saveJsonFile == "null")
+        {
+            InitializeBlankLocalData(debugPseudo);
+        }
+        else
+        {
+            ExtractDataFromSaveFile(saveJsonFile);
+            Debug.Log(LocalSaveData["level" + 0 + "_timesCount"]);
+        }
+        Debug.Log("read save from local");
+
+    }
+
+    [ContextMenu("write data on local")]
+    public void WriteSaveFileOnLocal()
+    {
+        string saveFileJson = JsonConvert.SerializeObject(LocalSaveData, Formatting.Indented);
+        PlayerPrefs.SetString("save", saveFileJson);
+        Debug.Log("write save on local");
+
     }
 
 
@@ -83,42 +143,42 @@ public class LocalSaveManager : MonoBehaviour
 
     public void UpdateLocalSaveData(int lvlIndex, float newTime)
     {
-        int previousTimesCount = int.Parse(localSaveData["level" + lvlIndex + "_timesCount"]);
+        int previousTimesCount = int.Parse(LocalSaveData["level" + lvlIndex + "_timesCount"]);
 
         if (previousTimesCount < 10)
         {
-            localSaveData["level" + lvlIndex + "_timesCount"] = (previousTimesCount + 1).ToString();
+            LocalSaveData["level" + lvlIndex + "_timesCount"] = (previousTimesCount + 1).ToString();
 
             List<float> times = new List<float>();
 
             for (int i = 1; i <= previousTimesCount; i++)
             {
-                times.Add(float.Parse(localSaveData["level" + lvlIndex + "_time" + i]));
+                times.Add(float.Parse(LocalSaveData["level" + lvlIndex + "_time" + i]));
             }
             times = times.SortedInsert(float.Parse(newTime.ToString("F2")));
 
             for (int i = 1; i <= previousTimesCount+1; i++)
             {
-                localSaveData["level" + lvlIndex + "_time" + i] = times[i - 1].ToString();
+                LocalSaveData["level" + lvlIndex + "_time" + i] = times[i - 1].ToString();
             }
 
             
         }
 
-        else if (float.Parse(localSaveData["level"+lvlIndex+"_time"+10]) > newTime) //on doit rajouter le temps
+        else if (float.Parse(LocalSaveData["level"+lvlIndex+"_time"+10]) > newTime) //on doit rajouter le temps
         {
             List<float> times = new List<float>();
             
 
             for(int i = 1; i <= 10; i++)
             {
-                times.Add(float.Parse(localSaveData["level" + lvlIndex + "_time" + i]));
+                times.Add(float.Parse(LocalSaveData["level" + lvlIndex + "_time" + i]));
             }
             times = times.SortedInsertTruncate(float.Parse(newTime.ToString("F2")));
 
             for (int i = 1; i <= 10; i++)
             {
-                localSaveData["level" + lvlIndex + "_time" + i] = times[i-1].ToString();
+                LocalSaveData["level" + lvlIndex + "_time" + i] = times[i-1].ToString();
             }
 
         }
@@ -136,7 +196,7 @@ public class LocalSaveManager : MonoBehaviour
     [ContextMenu("write save data online")]
     public async Task WriteSaveDataOnCloud()
     {
-        string json = JsonConvert.SerializeObject(localSaveData, Formatting.Indented);
+        string json = JsonConvert.SerializeObject(LocalSaveData, Formatting.Indented);
         byte[] file = Encoding.UTF8.GetBytes(json);
         await CloudSaveService.Instance.Files.Player.SaveAsync("save", file);
         Debug.Log("data written");
@@ -150,43 +210,39 @@ public class LocalSaveManager : MonoBehaviour
     [ContextMenu("reinitialize local data")]
     public void DebugReinitializeLocalSaveData()
     {
-        localSaveData = new Dictionary<string, string>();
+        LocalSaveData = new Dictionary<string, string>();
         for (int lvlIndex = 0; lvlIndex < LevelsDatabase.registeredLevelNames.Length; lvlIndex++)
         {
-            localSaveData["level" + lvlIndex + "_timesCount"] = 0.ToString();
+            LocalSaveData["level" + lvlIndex + "_timesCount"] = 0.ToString();
         }
-        localSaveData["pseudo"] = debugPseudo;
+        LocalSaveData["pseudo"] = debugPseudo;
+
+        Debug.Log("reinitialize lcoal data");
+
     }
     public string debugPseudo;
 
     [ContextMenu("Rename local data pseudo")]
     public void RenameCurrentPseudo()
     {
-        localSaveData["pseudo"] = debugPseudo;
+        LocalSaveData["pseudo"] = debugPseudo;
     }
 
 
-    public void InitializeLocalDataOnSignUp(string pseudo)
+    public void InitializeBlankLocalData(string pseudo)
     {
-        localSaveData = new Dictionary<string, string>();
+        LocalSaveData = new Dictionary<string, string>();
         for(int lvlIndex = 0; lvlIndex < LevelsDatabase.registeredLevelNames.Length; lvlIndex++)
         {
-            localSaveData["level" + lvlIndex + "_timesCount"] = 0.ToString();
+            LocalSaveData["level" + lvlIndex + "_timesCount"] = 0.ToString();
         }
-        localSaveData["pseudo"] = pseudo;
+        LocalSaveData["pseudo"] = pseudo;
     }
 
-    public bool OnWantsToQuit()
-    {
-        QuitAfterSaving();
-        return false;
-    }
 
-    public async void QuitAfterSaving()
-    {
-        await WriteSaveDataOnCloud();
-        Application.Quit();
-    }
+
+
+   
 
 
 
@@ -194,22 +250,3 @@ public class LocalSaveManager : MonoBehaviour
 
 }
 
-[InitializeOnLoad]
-public static class PlayModeNotifier
-{
-    static PlayModeNotifier()
-    {
-        //EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-    }
-
-    private static void OnPlayModeStateChanged(PlayModeStateChange state)
-    {
-        if (state == PlayModeStateChange.ExitingPlayMode)
-        {
-            //Debug.Log("exit play mode");
-            //LocalSaveManager.inst.QuitAfterSaving();
-
-            //au final non car pas assez rapide
-        }
-    }
-}
