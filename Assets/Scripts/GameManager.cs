@@ -14,11 +14,12 @@ public class GameManager : MonoBehaviour
     public float levelTimer = 0f;
     [HideInInspector] public int lvlID;
     public bool Jeufini;
-    public TextMeshProUGUI affichageTimer;
-    public LevelUIManager ImageManager;
+    public TextMeshProUGUI affichageTimer;    
     public Scene loadedScene;
     public PauseMenu pauseMenu;
     public LevelsDatabase levelsDatabase;
+    public int NBTargetMax = 3;
+    public int NBTargetRestante;
 
     public static GameManager inst;
     public void Awake()
@@ -36,6 +37,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         loadedScene = SceneManager.GetActiveScene();
+        LevelUIManager.Instance.InitialiseTargetUI();
+        NBTargetRestante = NBTargetMax;
     }
     void Update()
     {
@@ -60,15 +63,7 @@ public class GameManager : MonoBehaviour
         //}
 
         LocalSaveManager.inst.UpdateLocalSaveData(lvlID, levelTimer);
-
-        if(LocalSaveManager.inst.saveMode == SaveMode.Online)
-        {
-            LocalSaveManager.inst.WriteSaveDataOnCloudParallelExec();
-        }
-        else
-        {
-            LocalSaveManager.inst.WriteSaveFileOnLocal();
-        }
+        LocalSaveManager.inst.WriteSaveDataOnCloudParallelExec();
 
         Time.timeScale = 1f;
         SceneManager.LoadScene(1);
@@ -82,6 +77,18 @@ public class GameManager : MonoBehaviour
             timeBeginPlay = Time.time;
         }        
     }
+    public void CollideTarget(GameObject target)
+    {
+        NBTargetRestante -= 1;        
+        LevelUIManager.Instance.UpdateTargetsUI();
+
+        if (NBTargetRestante == 0)
+        {
+            GameManager.inst.OnLevelWin();
+        }
+        Destroy(target);
+    }
+    
   
    
 }
