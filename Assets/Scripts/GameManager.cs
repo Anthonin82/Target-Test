@@ -63,7 +63,14 @@ public class GameManager : MonoBehaviour
         //}
 
         LocalSaveManager.inst.UpdateLocalSaveData(lvlID, levelTimer);
-        LocalSaveManager.inst.WriteSaveDataOnCloudParallelExec();
+        if (LocalSaveManager.inst.saveMode == SaveMode.Online)
+        {
+            LocalSaveManager.inst.WriteSaveDataOnCloudParallelExec();
+        }
+        else
+        {
+            LocalSaveManager.inst.WriteSaveFileOnLocal();
+        }
 
         Time.timeScale = 1f;
         SceneManager.LoadScene(1);
