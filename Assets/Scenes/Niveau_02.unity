@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -38,13 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
-  m_GIWorkflowMode: 1
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -67,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -334,17 +330,25 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1900335677780223160, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
-      propertyPath: UIimages.Array.data[0]
+      propertyPath: TargetsUI
       value: 
-      objectReference: {fileID: 2484166603560183302}
+      objectReference: {fileID: 1336933519}
     - target: {fileID: 1900335677780223160, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
-      propertyPath: UIimages.Array.data[1]
+      propertyPath: UIimagePrefab
       value: 
-      objectReference: {fileID: 986678852073014272}
+      objectReference: {fileID: 5999844501159992611, guid: 789f055e84e6f23479b345d4b97bad18, type: 3}
     - target: {fileID: 1900335677780223160, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
-      propertyPath: UIimages.Array.data[2]
+      propertyPath: 'UIimages.Array.data[0]'
       value: 
-      objectReference: {fileID: 6823827271832108164}
+      objectReference: {fileID: 0}
+    - target: {fileID: 1900335677780223160, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
+      propertyPath: 'UIimages.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1900335677780223160, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
+      propertyPath: 'UIimages.Array.data[2]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2495493003342739012, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
       propertyPath: lvlID
       value: 1
@@ -354,17 +358,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1741344063020410297}
     - target: {fileID: 5034479378614579170, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
-      propertyPath: UIimages.Array.data[0]
+      propertyPath: 'UIimages.Array.data[0]'
       value: 
-      objectReference: {fileID: 2484166603560183302}
+      objectReference: {fileID: 0}
     - target: {fileID: 5034479378614579170, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
-      propertyPath: UIimages.Array.data[1]
+      propertyPath: 'UIimages.Array.data[1]'
       value: 
-      objectReference: {fileID: 986678852073014272}
+      objectReference: {fileID: 0}
     - target: {fileID: 5034479378614579170, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
-      propertyPath: UIimages.Array.data[2]
+      propertyPath: 'UIimages.Array.data[2]'
       value: 
-      objectReference: {fileID: 6823827271832108164}
+      objectReference: {fileID: 0}
     - target: {fileID: 6788547146330402970, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
       propertyPath: m_Name
       value: GameManager
@@ -1056,6 +1060,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db8c71ad4e7e5684aa63369604407230, type: 3}
+--- !u!1 &1336933519 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7717002254113531766, guid: db8c71ad4e7e5684aa63369604407230, type: 3}
+  m_PrefabInstance: {fileID: 1336933518}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1484429612
 GameObject:
   m_ObjectHideFlags: 0
@@ -1301,17 +1310,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf00761ac7cdd4443b54e44350e05fd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &986678852073014272 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5846768101718514168, guid: db8c71ad4e7e5684aa63369604407230, type: 3}
-  m_PrefabInstance: {fileID: 1336933518}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1741344063020410297 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2808117457815833133, guid: db8c71ad4e7e5684aa63369604407230, type: 3}
@@ -1323,33 +1321,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2484166603560183302 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 604720315769064538, guid: db8c71ad4e7e5684aa63369604407230, type: 3}
-  m_PrefabInstance: {fileID: 1336933518}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3756437399858234899 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 540959641875093210, guid: db8c71ad4e7e5684aa63369604407230, type: 3}
   m_PrefabInstance: {fileID: 1336933518}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6823827271832108164 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 836140841051645513, guid: db8c71ad4e7e5684aa63369604407230, type: 3}
-  m_PrefabInstance: {fileID: 1336933518}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

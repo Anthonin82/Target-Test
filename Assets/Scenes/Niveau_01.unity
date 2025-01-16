@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -38,13 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
-  m_GIWorkflowMode: 1
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -67,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 0
@@ -551,15 +547,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5999844501159992611, guid: 789f055e84e6f23479b345d4b97bad18, type: 3}
     - target: {fileID: 1900335677780223160, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
-      propertyPath: UIimages.Array.data[0]
+      propertyPath: 'UIimages.Array.data[0]'
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1900335677780223160, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
-      propertyPath: UIimages.Array.data[1]
+      propertyPath: 'UIimages.Array.data[1]'
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1900335677780223160, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
-      propertyPath: UIimages.Array.data[2]
+      propertyPath: 'UIimages.Array.data[2]'
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2495493003342739012, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
@@ -567,15 +563,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8450916457988585484}
     - target: {fileID: 5034479378614579170, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
-      propertyPath: UIimages.Array.data[0]
+      propertyPath: 'UIimages.Array.data[0]'
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5034479378614579170, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
-      propertyPath: UIimages.Array.data[1]
+      propertyPath: 'UIimages.Array.data[1]'
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5034479378614579170, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
-      propertyPath: UIimages.Array.data[2]
+      propertyPath: 'UIimages.Array.data[2]'
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6788547146330402970, guid: 5d1929666dc5a3349b067818c3aa617a, type: 3}
@@ -1075,6 +1071,30 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7717002254113531766, guid: db8c71ad4e7e5684aa63369604407230, type: 3}
   m_PrefabInstance: {fileID: 1659488774824982998}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2120048991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120048987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_StartCorner: 1
+  m_StartAxis: 0
+  m_CellSize: {x: 100, y: 100}
+  m_Spacing: {x: 0, y: 0}
+  m_Constraint: 0
+  m_ConstraintCount: 2
 --- !u!4 &2129799503 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1783837706686685572, guid: fd02b7d653d97494580901340364c6b6, type: 3}
@@ -1187,7 +1207,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7717002254113531766, guid: db8c71ad4e7e5684aa63369604407230, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2120048991}
   m_SourcePrefab: {fileID: 100100000, guid: db8c71ad4e7e5684aa63369604407230, type: 3}
 --- !u!1001 &4748657410774033934
 PrefabInstance:
